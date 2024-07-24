@@ -32,7 +32,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: _WaveNoiseStrength
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -94,10 +94,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_01f5fb6d5ea8433080a87ac9ffe1f31e: 0
+    - Vector1_01f5fb6d5ea8433080a87ac9ffe1f31e: 3.26
     - Vector1_1e98e329fd864267af3e1ff49baaf2a4: 20
-    - Vector1_39868674c5524649a16287eb56ebe90e: 0.3
-    - Vector1_9fad8597dcf34c828162f3d05a0ae23c: 52.65
+    - Vector1_39868674c5524649a16287eb56ebe90e: 0.53
+    - Vector1_9fad8597dcf34c828162f3d05a0ae23c: 0.9
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
@@ -113,7 +113,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _FoamAmount: 140.1
+    - _FoamAmount: 2
     - _FoamCutoff: 120
     - _Foam_scale: 92.1
     - _Foam_speed: 0.5
@@ -129,7 +129,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RippleCutoff: 1
+    - _RippleCutoff: 30.5
     - _RippleSpeedTowardsShore: 0.31
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -143,17 +143,17 @@ Material:
     - _WaveHeight: 11.5
     - _WaveNoiseScale: 2.45
     - _WaveNoiseStrength: 13.07
-    - _WaveSharpness: 1
+    - _WaveSharpness: 0
     - _WaveSpeed: 0.44
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - Color_8e85f698c5c34ae8909cd7f57e40dc88: {r: 1, g: 1, b: 1, a: 0}
-    - Color_fad54c46489b494b85e60428b698011d: {r: 0.027191062, g: 0.5924439, b: 0.7584905, a: 0.5058824}
+    - Color_fad54c46489b494b85e60428b698011d: {r: 0.23423992, g: 0.57143676, b: 0.7433963, a: 0.7058824}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _WaveFoamColor: {r: 0.69411767, g: 0.8927049, b: 1, a: 1}
+    - _WaveFoamColor: {r: 0.6396227, g: 0.87525403, b: 1, a: 1}
   m_BuildTextureStacks: []
