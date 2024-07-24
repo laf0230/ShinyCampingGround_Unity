@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public UIManager uIManager;
     public WayPointManager wayPointManager;
-    public GameObject entrance;
+    public EnteranceController entrance;
     public GameObject negativeEntrance;
     public NavMeshSurface navmesh;
     public List<GameObject> npcs;
@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
                     GameObject singleton = new GameObject(typeof(GameManager).ToString());
                     instance = singleton.AddComponent<GameManager>();
                 }
-                DontDestroyOnLoad(instance.gameObject);
             }
             return instance;
         }
@@ -38,15 +37,18 @@ public class GameManager : MonoBehaviour
     // 싱글톤 인스턴스 초기화 시 검사
     private void Awake()
     {
+        Application.targetFrameRate = 1000;
+
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); 
         }
         else if (instance != this)
         {
             Destroy(gameObject); 
         }
+
+
     }
 
     private void Start()
@@ -70,11 +72,13 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameSequence()
     {
-        StartCoroutine(SpawnNPC(npcs[0], spawnPoint: entrance.transform.position));
-        yield return new WaitUntil(() => Input.GetMouseButton(0) || Input.touchCount < 0);
+        StartCoroutine(SpawnNPC(npcs[0], spawnPoint: entrance.gameObject.transform.position));
+        yield return null;
+        yield return new WaitUntil(() =>  entrance.IsOutCharacter());
         yield return new WaitForSeconds(17f);
-        StartCoroutine(SpawnNPC(npcs[1], spawnPoint: entrance.transform.position));
-        yield return new WaitUntil(() => Input.GetMouseButton(0) || Input.touchCount < 0);
+        StartCoroutine(SpawnNPC(npcs[1], spawnPoint: entrance.gameObject.transform.position));
+        yield return null;
+        yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(26f);
         StartCoroutine(SpawnNPC(npcs[2], spawnPoint: negativeEntrance.transform.position));
     }

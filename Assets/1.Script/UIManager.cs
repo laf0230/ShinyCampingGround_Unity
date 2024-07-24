@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI dialogue_name;
     public TextMeshProUGUI dialogue_text;
     public Button dialogueSkip;
+    public Button dialogueInterectionRect;
 
     public float alertTime = 0;
     public WaitForSeconds alertDuration = new WaitForSeconds(3);
@@ -39,6 +40,7 @@ public class UIManager : MonoBehaviour
     public WaitForSeconds coinAlermDuration;
 
     public bool isSkipRequested = false;
+    private bool isNextDialogueRequested = false;
 
 
     private static UIManager instance;
@@ -55,7 +57,6 @@ public class UIManager : MonoBehaviour
                     GameObject singleton = new GameObject(typeof(UIManager).ToString());
                     instance = singleton.AddComponent<UIManager>();
                 }
-                DontDestroyOnLoad(instance.gameObject);
             }
             return instance;
         }
@@ -177,6 +178,8 @@ public class UIManager : MonoBehaviour
     public void ActiveDialogue(string name, string text)
     {
         dialogueSkip.onClick.AddListener(OnSkipBtnClicked);
+        dialogueInterectionRect.onClick.AddListener(OnNextButtonClicked);
+
         dialogue_box.SetActive(true);
         dialogue_name.text = name;
         dialogue_text.text = text;
@@ -185,8 +188,11 @@ public class UIManager : MonoBehaviour
     public void DisableDialogue()
     {
         dialogueSkip.onClick.RemoveAllListeners(); 
-        isSkipRequested = false;
+        dialogueInterectionRect.onClick.RemoveListener(OnNextButtonClicked);
 
+        isSkipRequested = false;
+        isNextDialogueRequested = false;
+        
         dialogue_box.SetActive(false);
     }
 
@@ -195,13 +201,25 @@ public class UIManager : MonoBehaviour
         dialogue_name.text = name;
         dialogue_text.text = text;
     }
+
     public void OnSkipBtnClicked()
     {
-        isSkipRequested = true;
+        this.isSkipRequested = true;
+        Debug.Log("Try Skip");
     }
 
     public bool IsSkipRequested()
     {
         return isSkipRequested;
     }
+
+    public void OnNextButtonClicked()
+    {
+        isNextDialogueRequested = true;
+    }
+
+    public bool IsNextDialogueRequested()
+    {
+        return isNextDialogueRequested;
+    } 
 }
