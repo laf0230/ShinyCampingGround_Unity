@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adcc26f9a0dfba348a72edd1733bfb08, type: 3}
+  m_Name: Dialogue_Influencer 3
+  m_EditorClassIdentifier: 
+  dialogues:
+  - "\uC601\uCC28~ <br>\uD734 \uACA8\uC6B0 \uC124\uCE58 \uB2E4 \uB05D\uB0C8\uB124
+    \uADF8\uB7FC \uB77C\uC774\uBE0C \uBC29\uC1A1 \uC2DC\uC791\uD574 \uBCFC\uAE4C?"

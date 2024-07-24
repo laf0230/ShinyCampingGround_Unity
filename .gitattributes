@@ -1,0 +1,6 @@
+CartoonValley.FBX filter=lfs diff=lfs merge=lfs -text
+CartoonValley.prefab filter=lfs diff=lfs merge=lfs -text
+night.wav filter=lfs diff=lfs merge=lfs -text
+day.wav filter=lfs diff=lfs merge=lfs -text
+main.wav filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text

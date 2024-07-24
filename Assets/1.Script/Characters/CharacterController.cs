@@ -1,0 +1,317 @@
+using Cinemachine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public enum SpeechType
+{
+    global,
+    personal
+}
+
+public class CharacterController : MonoBehaviour
+{
+    public enum States
+    {
+        Idle,
+        Move,
+        Talk,
+        Build,
+        Pack,
+        Exit
+    }
+
+    public List<States> states = new List<States>();
+
+    protected Rigidbody rb;
+    protected NavMeshAgent navMeshAgent;
+    protected bool isMoveable = true;
+
+    public GameObject tentTool;
+    public Animator animator { get; set; }
+    public GameObject trash;
+
+    [SerializeField] public string characterName;
+    [SerializeField] public GameObject Character;
+    [SerializeField] public GameObject hammer;
+    [SerializeField] public GameObject campKit;
+    // [SerializeField] public 
+    [SerializeField] public float moveSpeed = 5f;
+    [SerializeField] public GameObject goal;
+    [SerializeField] public List<GameObject> goals = new List<GameObject>();
+    [SerializeField] public CinemachineVirtualCamera cam;
+    [SerializeField] public SpeechBubbleController SpeechBubbleController;
+    [SerializeField] public List<SODialogue> dialogues;
+    [SerializeField] public SODialogue randomSpeech;
+    [SerializeField] public NPCInteraction interactionArea;
+
+    [SerializeField] public float randomAnimDuration = 10f;
+    [SerializeField] public float totalRandomAnimDuration = 120f;
+
+    [SerializeField] public WaitForSeconds randomAnimSec;
+    [SerializeField] public WaitForSeconds totalRandomAnimSec;
+    [SerializeField] public int currentSiturationIndex = 0; // 상황: 대화들의 묶음
+    [SerializeField] public int currentDialogueIndex = 0; // 현제 대화 인댁스: 현제 대화의 위치
+
+    CharacterBlink characterFace;
+    AudioSource audioSource;
+    public bool isRandomAction = false;
+
+    protected virtual void Start()
+    {
+        characterFace = GetComponent<CharacterBlink>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        audioSource = GetComponent<AudioSource>();
+        randomAnimSec = new WaitForSeconds(randomAnimDuration);
+        totalRandomAnimSec = new WaitForSeconds(totalRandomAnimDuration);
+    }
+
+    public void OnEnable()
+    {
+        rb = GetComponent<Rigidbody>();
+        animator = Character.GetComponent<Animator>();
+        cam = GetComponentInChildren<CinemachineVirtualCamera>();
+
+        if (characterFace != null)
+            characterFace.ActiveBlink(true);
+    }
+
+    private void Update()
+    {
+        // 기본적으로 flick
+        // collider를 나갈 시 dialogue를 false로
+        /*
+        if (interactionArea != null && isRandomAction && interactionArea.isInPlayer)
+        {
+            // 랜덤 애니 중일 때
+            int randomIndex = Random.Range(0, randomSpeech.dialogues.Count);
+
+            SpeechBubbleController.SetName(characterName);
+            SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
+            SpeechBubbleController.ActiveBubble();
+        }
+        else if (interactionArea != null && !isRandomAction && interactionArea.isInPlayer)
+        {
+            // 랜덤 액티브가 아닐 때
+            SpeechBubbleController.DisableBubble();
+        }
+        */
+    }
+
+    public void StartAction()
+    {
+        StartCoroutine(ActionSequence());
+    }
+
+    public virtual IEnumerator ActionSequence()
+    {
+        yield return null;
+    }
+
+    protected virtual IEnumerator Enter()
+    {
+
+        yield return new WaitForFixedUpdate();
+    }
+
+    protected virtual IEnumerator MoveTo(GameObject wayPoint)
+    {
+        animator.SetBool("IsMove", true);
+        while (true)
+        {
+            if (Vector3.Distance(wayPoint.transform.position, transform.position) < 1f)
+            {
+                Debug.Log("Goal to target");
+                animator.SetBool("IsMove", false);
+                break;
+            }
+
+            transform.LookAt(wayPoint.transform.position);
+
+            Vector3 direction = (wayPoint.transform.position - transform.position).normalized;
+
+            if (navMeshAgent.enabled)
+            {
+                navMeshAgent.SetDestination(wayPoint.transform.position);
+            }
+
+            // rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
+
+
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    protected IEnumerator Build(GameObject kit)
+    {
+        Debug.Log("DoBuild");
+        campKit = Instantiate(kit, transform.position, Quaternion.identity);
+        KitController kitController = campKit.GetComponent<KitController>();
+        hammer.SetActive(true);
+        animator.SetBool("IsBuild", true);
+        audioSource.Play();
+
+        yield return kitController.IEBuildKit();
+
+        animator.SetBool("IsBuild", false);
+
+        yield return new WaitForFixedUpdate();
+        hammer.SetActive(false);
+        audioSource.Stop();
+    }
+
+    protected IEnumerator Pack(GameObject kit)
+    {
+        Debug.Log("DoPack");
+        KitController kitController = campKit.GetComponent<KitController>();
+        hammer.SetActive(true);
+        audioSource.Play();
+        animator.SetBool("IsBuild", true);
+
+        yield return kitController.IEPackKit();
+
+        animator.SetBool("IsBuild", false);
+
+        yield return new WaitForFixedUpdate();
+        hammer.SetActive(false);
+        audioSource.Stop();
+    }
+
+    protected IEnumerator Talk(SpeechType _speechType)
+    {
+        Debug.Log(gameObject.name + " : state Enter: Talk");
+        // situration setting
+        SODialogue currentSituration = dialogues[currentSiturationIndex];
+
+        Debug.Log(currentSituration.dialogues.Count);
+        Debug.Log(currentDialogueIndex);
+
+
+        while (currentSituration.dialogues.Count > currentDialogueIndex)
+        {
+            switch (_speechType)
+            {
+                case SpeechType.global:
+                    cam.Priority = 11;
+                    GameManager.Instance.uIManager.ActiveDialogue(characterName, currentSituration.dialogues[currentDialogueIndex]);
+                    if (characterFace != null)
+                        characterFace.ActiveTalk(true);
+
+                    Debug.Log(currentSituration.dialogues[currentDialogueIndex]);
+
+                    // 다음 대사 혹은 스킵 사용
+                    yield return new WaitUntil(() => 
+                        Input.GetMouseButtonDown(0) ||
+                        Input.touchCount > 0 ||
+                        GameManager.Instance.uIManager.IsSkipRequested() 
+                    );
+                    yield return null;
+                    GameManager.Instance.uIManager.DisableDialogue();
+                    break;
+
+                case SpeechType.personal:
+                    if (characterFace != null)
+                        characterFace.ActiveTalk(true);
+                   
+                    SpeechBubbleController.SetName(characterName);
+                    SpeechBubbleController.SetText(currentSituration.dialogues[currentDialogueIndex]);
+                    SpeechBubbleController.FlickBubble();
+                    break;
+            }
+            if (GameManager.Instance.uIManager.isSkipRequested)
+            {
+            // while문 break
+                break;
+            }
+
+
+            cam.Priority = 9;
+            currentDialogueIndex++;
+        }
+        currentSiturationIndex++;
+        currentDialogueIndex = 0;
+
+        if (characterFace != null)
+            characterFace.ActiveTalk(false);
+    }
+
+    protected virtual IEnumerator RandomAction()
+    {
+        isRandomAction = true;
+        KitController kitController = campKit.GetComponent<KitController>();
+
+        float startTime = Time.time;
+
+        while (Time.time - startTime < totalRandomAnimDuration)
+        {
+            Transform furniture = kitController.kit[Random.Range(0, kitController.kit.Length)];
+            yield return MoveTo(furniture.gameObject);
+            string furnitureTag = furniture.tag;
+            Debug.Log(furnitureTag);
+            rb.isKinematic = true;
+            switch (furnitureTag)
+            {
+                case "Sit":
+                    transform.position = furniture.transform.position;
+                    transform.rotation = furniture.transform.rotation;
+                    animator.SetBool("IsSit", true);
+                    break;
+                case "Lie":
+                    transform.position = furniture.transform.position;
+                    transform.rotation = furniture.transform.rotation;
+                    animator.SetBool("IsLie", true);
+                    break;
+                case "Tent":
+                    transform.position = furniture.transform.position;
+                    transform.rotation = furniture.transform.rotation;
+                    if (tentTool != null)
+                        tentTool.SetActive(true);
+
+                    animator.SetBool("IsTent", true);
+                    break;
+            }
+            yield return randomAnimSec;
+            rb.isKinematic = false;
+            if (tentTool != null)
+                tentTool.SetActive(false);
+
+            animator.SetBool("IsSit", false);
+            animator.SetBool("IsLie", false);
+            animator.SetBool("IsTent", false);
+        }
+        isRandomAction = false;
+    }
+
+    public void ActiveRandomDialogue(bool active)
+    {
+        if (active)
+        {
+            int randomIndex = Random.Range(0, randomSpeech.dialogues.Count);
+            
+            if(characterFace != null)
+                characterFace.ActiveTalk(true);
+
+            SpeechBubbleController.SetName(characterName);
+            SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
+            SpeechBubbleController.ActiveBubble();
+        }
+        else
+        {
+            if(characterFace != null)
+                characterFace.ActiveTalk(false);
+
+            SpeechBubbleController.DisableBubble();
+        }
+    }
+
+    public void FlickDialogue()
+    {
+        int randomIndex = Random.Range(0, randomSpeech.dialogues.Count);
+
+        SpeechBubbleController.SetName(characterName);
+        SpeechBubbleController.FlickBubble();
+        SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
+    }
+}
+
