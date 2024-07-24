@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cinemachine;
+using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class CameraController : MonoBehaviour
 
     public Joystick joystick; // Joystick 스크립트
     public bool isInvertY = false;
+
 
     private void Start()
     {
@@ -80,7 +82,7 @@ public class CameraController : MonoBehaviour
             // 터치가 끝나면 핀치 제스처 비활성화
             isPinching = false;
         }
-    }
+ }
 
     void UpdateCameraDistance()
     {
