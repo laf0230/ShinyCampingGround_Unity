@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class NPCInteraction : MonoBehaviour
 {
-    public bool isInterectionObj;
+    public bool isInterectionObj = false;
     
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggeEnter(Collider other)
     {
         if(other.CompareTag("NPC") || other.CompareTag("Trash"))
         {
             if(other.CompareTag("NPC") && other.GetComponent<CharacterController>().isRandomAction)
                 other.GetComponent<CharacterController>().ActiveRandomDialogue(true);
-
-            isInterectionObj = true;
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Trash"))
+            isInterectionObj = true;
+        else if (other.CompareTag("NPC"))
+            isInterectionObj = !other.GetComponent<NegativeCharacterController>().isKnockdown;
     }
 
     private void OnTriggerExit(Collider other)
@@ -23,8 +29,11 @@ public class NPCInteraction : MonoBehaviour
         {
             if(other.CompareTag("NPC"))
                 other.GetComponent<CharacterController>().ActiveRandomDialogue(false);
-
-            isInterectionObj = false;
         }
+    }
+
+    public void SetIsInterectionObj(bool setBool)
+    {
+        isInterectionObj = setBool; 
     }
 }

@@ -64,6 +64,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            Time.timeScale = 3.0f;
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Time.timeScale = 1.0f;
+        }
+    }
+
     public void GameStart()
     {
         uIManager.ToggleAlert(alertType.sub, "", false);

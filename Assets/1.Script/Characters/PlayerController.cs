@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     {
         characterTransform = transform; // 캐릭터 오브젝트의 Transform을 저장
         animator = playerObject.GetComponent<Animator>(); // Animator 컴포넌트 가져오기
-
+        
         rb = GetComponent<Rigidbody>();
         freeLookCamera = Camera.main;
     }
@@ -28,6 +28,23 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         UpdateAnimator();
+
+        if (Input.GetMouseButtonDown(0) && nPCInteraction.isInterectionObj)
+        {
+            Debug.Log("a");
+            ClassifyObject(Input.mousePosition);
+        }
+
+        if (Input.touchCount > 0 && nPCInteraction.isInterectionObj)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                Vector3 touchPosition = touch.position;
+                ClassifyObject(touchPosition);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -57,46 +74,23 @@ public class PlayerController : MonoBehaviour
             // 캐릭터의 이동 처리
             rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
         }
-
-        if (Input.GetMouseButtonDown(0) && nPCInteraction.isInterectionObj)
-        {
-            ClassifyObject(Input.mousePosition);
-        }
-
-        if (Input.touchCount > 0 && nPCInteraction.isInterectionObj)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                Vector3 touchPosition = touch.position;
-                ClassifyObject(touchPosition);
-            }
-        }
-
-        if(nPCInteraction.isInterectionObj)
-        {
-            // npc random dialogue
-        }
     }
 
     public void ClassifyObject(Vector3 vectorToRay)
     {
+        nPCInteraction.SetIsInterectionObj(false);
         Ray pointPosition = Camera.main.ScreenPointToRay(vectorToRay);
 
-        if (Physics.Raycast(pointPosition, out RaycastHit hit,Mathf.Infinity, layerMask: LayerMask.GetMask("Interection")))
+        if (Physics.Raycast(pointPosition, out RaycastHit hit, 1000f, 1 << LayerMask.NameToLayer("Interection")))
         {
-            Debug.Log("Cathched: " + hit.collider.name);
-            if (hit.collider.TryGetComponent<NegativeCharacterController>(out NegativeCharacterController negativeCharacter))
+            if(hit.collider.CompareTag("NPC"))
             {
-                // 부정적 NPC
-                negativeCharacter.Catehed();
+                hit.collider.GetComponent<NegativeCharacterController>().Catehed();
             }
-            else if (hit.collider.TryGetComponent<TrashController>(out TrashController trash))
+
+            if(hit.collider.CompareTag("Trash"))
             {
-                Debug.Log("Detected: trash");
-                // 쓰래기
-                trash.Clean();
+                hit.collider.GetComponent<TrashController>().Clean();
             }
         }
     }

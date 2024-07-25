@@ -65,6 +65,7 @@ public class NegativeCharacterController : CharacterController
 
     IEnumerator Knockdown()
     {
+        isKnockdown = true;
         MovementActive(false);
 
         SoundManager.Instance.PlaySFXMusic("NegativeDamaged");
