@@ -19,7 +19,7 @@ public class NPCInteraction : MonoBehaviour
     {
         if (other.CompareTag("Trash"))
             isInterectionObj = true;
-        else if (other.CompareTag("NPC"))
+        else if (other.CompareTag("NPC") && other.GetComponent<NegativeCharacterController>())
             isInterectionObj = !other.GetComponent<NegativeCharacterController>().isKnockdown;
     }
 

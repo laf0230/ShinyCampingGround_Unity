@@ -22,11 +22,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI uiCoin;
     public TextMeshProUGUI uiCoin2;
 
-    public GameObject dialogue_box;
-    public TextMeshProUGUI dialogue_name;
-    public TextMeshProUGUI dialogue_text;
-    public Button dialogueSkip;
-    public Button dialogueInterectionRect;
+    public DialogueManager dialogueManager;
+
 
     public float alertTime = 0;
     public WaitForSeconds alertDuration = new WaitForSeconds(3);
@@ -38,10 +35,6 @@ public class UIManager : MonoBehaviour
     public GameObject coin_box;
     public TextMeshProUGUI coinCount;
     public WaitForSeconds coinAlermDuration;
-
-    public bool isSkipRequested = false;
-    private bool isNextDialogueRequested = false;
-
 
     private static UIManager instance;
 
@@ -173,53 +166,4 @@ public class UIManager : MonoBehaviour
         yield return alertDuration;
         alert.SetActive(false);
     }
-
-    // ¡ﬂæ” ¥ÎªÁ√¢
-    public void ActiveDialogue(string name, string text)
-    {
-        dialogueSkip.onClick.AddListener(OnSkipBtnClicked);
-        dialogueInterectionRect.onClick.AddListener(OnNextButtonClicked);
-
-        dialogue_box.SetActive(true);
-        dialogue_name.text = name;
-        dialogue_text.text = text;
-    }
-
-    public void DisableDialogue()
-    {
-        dialogueSkip.onClick.RemoveAllListeners(); 
-        dialogueInterectionRect.onClick.RemoveListener(OnNextButtonClicked);
-
-        isSkipRequested = false;
-        isNextDialogueRequested = false;
-        
-        dialogue_box.SetActive(false);
-    }
-
-    public void SetDialogue(string name, string text)
-    {
-        dialogue_name.text = name;
-        dialogue_text.text = text;
-    }
-
-    public void OnSkipBtnClicked()
-    {
-        this.isSkipRequested = true;
-        Debug.Log("Try Skip");
-    }
-
-    public bool IsSkipRequested()
-    {
-        return isSkipRequested;
-    }
-
-    public void OnNextButtonClicked()
-    {
-        isNextDialogueRequested = true;
-    }
-
-    public bool IsNextDialogueRequested()
-    {
-        return isNextDialogueRequested;
-    } 
 }

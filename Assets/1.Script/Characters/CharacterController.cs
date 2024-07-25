@@ -79,24 +79,10 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        // 기본적으로 flick
-        // collider를 나갈 시 dialogue를 false로
-        /*
-        if (interactionArea != null && isRandomAction && interactionArea.isInPlayer)
+        if(GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() && GameManager.Instance.uIManager.dialogueManager.IsTyping())
         {
-            // 랜덤 애니 중일 때
-            int randomIndex = Random.Range(0, randomSpeech.dialogues.Count);
-
-            SpeechBubbleController.SetName(characterName);
-            SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
-            SpeechBubbleController.ActiveBubble();
+            GameManager.Instance.uIManager.dialogueManager.SetCompleteDialogue();
         }
-        else if (interactionArea != null && !isRandomAction && interactionArea.isInPlayer)
-        {
-            // 랜덤 액티브가 아닐 때
-            SpeechBubbleController.DisableBubble();
-        }
-        */
     }
 
     public void StartAction()
@@ -193,17 +179,23 @@ public class CharacterController : MonoBehaviour
             {
                 case SpeechType.global:
                     cam.Priority = 11;
-                    GameManager.Instance.uIManager.ActiveDialogue(characterName, currentSituration.dialogues[currentDialogueIndex]);
+                    GameManager.Instance.uIManager.dialogueManager.ActiveDialogue(characterName, currentSituration.dialogues[currentDialogueIndex]);
                     if (characterFace != null)
                         characterFace.ActiveTalk(true);
 
                     Debug.Log(currentSituration.dialogues[currentDialogueIndex]);
-
-                    // 다음 대사 혹은 스킵 사용
-                    yield return new WaitUntil(() =>
-                        GameManager.Instance.uIManager.IsNextDialogueRequested() ||
-                        GameManager.Instance.uIManager.IsSkipRequested()
-                    );
+                    // 텍스트가 자동으로 흘러가게 설정할 때 코드
+                    if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
+                    {
+                        // 텍스트가 작성되지 않음 && (다음 버튼을 눌렀을 때 || 스킵 버튼을 눌렀을 때)
+                        yield return new WaitUntil(() => !GameManager.Instance.uIManager.dialogueManager.IsTyping());
+                        yield return null;
+                        yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
+                    } else
+                    {
+                        yield return new WaitUntil(() => !GameManager.Instance.uIManager.dialogueManager.IsTyping());
+                        yield return new WaitForSeconds(1.5f);
+                    }
                     break; // case break
 
                 case SpeechType.personal:
@@ -218,16 +210,16 @@ public class CharacterController : MonoBehaviour
 
             currentDialogueIndex++; // 다음 대사로 변경
 
-            if (GameManager.Instance.uIManager.IsSkipRequested())
+            if (GameManager.Instance.uIManager.dialogueManager.IsSkipRequested())
             {
-                Debug.Log("Skip requeset    " + GameManager.Instance.uIManager.IsSkipRequested());
+                Debug.Log("Skip requeset    " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
                 break; // while break
             }
 
-            GameManager.Instance.uIManager.DisableDialogue();
+            GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
         }
 
-        GameManager.Instance.uIManager.DisableDialogue();
+        GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
         cam.Priority = 9; // 카메라 순서 변경
         currentSiturationIndex++; // 다음 대사집으로 변경
         currentDialogueIndex = 0; // 대사 순서 초기화
