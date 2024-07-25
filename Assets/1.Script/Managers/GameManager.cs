@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public WayPointManager wayPointManager;
     public EnteranceController entrance;
     public GameObject negativeEntrance;
+    public GameObject ManagementOffice;
     public NavMeshSurface navmesh;
     public List<GameObject> npcs;
 
