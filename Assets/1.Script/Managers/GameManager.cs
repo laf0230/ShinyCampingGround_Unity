@@ -97,7 +97,9 @@ public class GameManager : MonoBehaviour
             uIManager.AddCoin(100);
         }
 
-        GameObject character = Instantiate(npc, spawnPoint, Quaternion.LookRotation(Vector3.left));
+        Quaternion rotation = entrance.transform.rotation * Quaternion.Euler(0, -90, 0);
+
+        GameObject character = Instantiate(npc, spawnPoint, rotation);
         CharacterController controller = character.GetComponent<CharacterController>();
         NegativeCharacterController negativeController = character.GetComponent<NegativeCharacterController>();
 
