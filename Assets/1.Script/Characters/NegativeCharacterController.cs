@@ -10,6 +10,7 @@ public class NegativeCharacterController : CharacterController
     public float stealTime = 3f;
     public WaitForSeconds stealDelay;
     public bool isKnockdown = true;
+    public Transform ManagementOffice;
 
 
     protected override void Start()
@@ -25,30 +26,32 @@ public class NegativeCharacterController : CharacterController
         GameManager.Instance.uIManager.ToggleAlert(alertType.sub, "도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", true);
 
         yield return Enter();
+
         yield return Talk(SpeechType.personal); // 5
         yield return new WaitForSeconds(2f);
+
         yield return MoveTo(goals[0]);
-        
         yield return Talk(SpeechType.personal); // 4
         yield return Steal();
         yield return new WaitForSeconds(2f);
         yield return stealDelay;
+
         yield return MoveTo(goals[1]);
-       
         yield return Talk(SpeechType.personal); // 3
         yield return Steal();
         yield return new WaitForSeconds(2f);
         yield return stealDelay;
+
         yield return MoveTo(goals[2]);
-       
         yield return Talk(SpeechType.personal); // 2
         yield return Steal(isManagementTent: true);
         yield return new WaitForSeconds(2f);
         yield return stealDelay;
+
         yield return MoveTo(goals[3]);
-       
         yield return Talk(SpeechType.personal); // 1
         yield return new WaitForSeconds(2f);
+
         GameManager.Instance.uIManager.ToggleAlert(alertType.sub, "", false);
         gameObject.SetActive(false);
     }

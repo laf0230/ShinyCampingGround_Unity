@@ -892,6 +892,7 @@ MonoBehaviour:
   wayPointManager: {fileID: 939720645}
   entrance: {fileID: 2032179756}
   negativeEntrance: {fileID: 1905464834}
+  ManagementOffice: {fileID: 0}
   navmesh: {fileID: 29868194}
   npcs:
   - {fileID: 4773706145962032427, guid: 8c8102f5a17e3a245b9fc1181b792f45, type: 3}
