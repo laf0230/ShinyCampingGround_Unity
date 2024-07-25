@@ -33,8 +33,8 @@ public class DialogueManager : MonoBehaviour
         }
 
         // 예제 텍스트
-        if(doTest)
-            ActiveDialogue("Test", "테스트 텍스트입니다! 안녕하세요? \n 하하하");
+        if (doTest)
+            ActiveDialogue("Test", "테스트 텍스트입니다! 안녕하세요? <br> 하하하");
     }
 
     public void ActiveDialogue(string name, string text)
@@ -45,7 +45,7 @@ public class DialogueManager : MonoBehaviour
 
     public void DisableDialogue()
     {
-        dialogueSkip.onClick.RemoveAllListeners(); 
+        dialogueSkip.onClick.RemoveAllListeners();
         dialogueInterectionRect.onClick.RemoveListener(OnNextButtonClicked);
         dialogueAuto.onClick.RemoveAllListeners();
 
@@ -108,7 +108,7 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator TypeText(string text)
     {
         isTyping = true;
-        isTypeComplete = false;
+        isTypeComplete = false; // 새로운 타이핑 시작 시 초기화
         dialogue_text.text = ""; // 텍스트를 초기화
 
         int index = 0;
@@ -144,11 +144,10 @@ public class DialogueManager : MonoBehaviour
         // 타이핑이 완료된 후 자동 모드일 경우 자동으로 다음 대사로 진행
         if (isTextAuto)
         {
-            yield return new WaitForSeconds(1.0f);
-            OnNextButtonClicked();
+            yield return new WaitForSeconds(1.5f); // 자동 진행 시 대사 간 간격 조절
+            isNextDialogueRequested = true;
         }
     }
-
 
     // 타이핑 효과가 진행 중인지 확인하는 메서드
     public bool IsTyping()
@@ -163,13 +162,20 @@ public class DialogueManager : MonoBehaviour
 
     public void OnAutoTextClicked()
     {
-        isTextAuto =! isTextAuto;
+        isTextAuto = !isTextAuto;
         if (isTextAuto)
         {
-            dialogueAuto.GetComponent<Image>().color = new Color(160, 160, 160);
-        } else
+            dialogueAuto.GetComponent<Image>().color = new Color(1, 1, 1); // 활성화 시 흰색
+            if (!isTyping && !isNextDialogueRequested) // 이미 타이핑이 완료된 상태라면 다음 대사로 넘어가기
+            {
+                isNextDialogueRequested = true;
+            }
+        }
+        else
         {
-            dialogueAuto.GetComponent<Image>().color = new Color(255, 255, 255);
+            dialogueAuto.GetComponent<Image>().color = new Color(0.627f, 0.627f, 0.627f); // 비활성화 시 회색
+            isSkipRequested = false;
+            isNextDialogueRequested = false;
         }
     }
 
@@ -178,3 +184,4 @@ public class DialogueManager : MonoBehaviour
         return isTextAuto;
     }
 }
+

@@ -181,7 +181,7 @@ public class CharacterController : MonoBehaviour
                     cam.Priority = 11;
                     GameManager.Instance.uIManager.dialogueManager.ActiveDialogue(characterName, currentSituration.dialogues[currentDialogueIndex]);
                     if (characterFace != null)
-                        characterFace.ActiveTalk(true);
+                        characterFace.ActiveFace("Talk", true);
 
                     Debug.Log(currentSituration.dialogues[currentDialogueIndex]);
                     // 텍스트가 자동으로 흘러가게 설정할 때 코드
@@ -191,7 +191,8 @@ public class CharacterController : MonoBehaviour
                         yield return new WaitUntil(() => !GameManager.Instance.uIManager.dialogueManager.IsTyping());
                         yield return null;
                         yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
-                    } else
+                    }
+                    else
                     {
                         yield return new WaitUntil(() => !GameManager.Instance.uIManager.dialogueManager.IsTyping());
                         yield return new WaitForSeconds(1.5f);
@@ -200,7 +201,7 @@ public class CharacterController : MonoBehaviour
 
                 case SpeechType.personal:
                     if (characterFace != null)
-                        characterFace.ActiveTalk(true);
+                        characterFace.ActiveFace("Talk", true);
 
                     SpeechBubbleController.SetName(characterName);
                     SpeechBubbleController.SetText(currentSituration.dialogues[currentDialogueIndex]);
@@ -212,7 +213,7 @@ public class CharacterController : MonoBehaviour
 
             if (GameManager.Instance.uIManager.dialogueManager.IsSkipRequested())
             {
-                Debug.Log("Skip requeset    " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
+                Debug.Log("Skip requeset " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
                 break; // while break
             }
 
@@ -225,8 +226,9 @@ public class CharacterController : MonoBehaviour
         currentDialogueIndex = 0; // 대사 순서 초기화
 
         if (characterFace != null)
-            characterFace.ActiveTalk(false);
+            characterFace.ActiveFace("Talk", false);
     }
+
 
     protected virtual IEnumerator RandomAction()
     {
@@ -282,7 +284,7 @@ public class CharacterController : MonoBehaviour
             int randomIndex = Random.Range(0, randomSpeech.dialogues.Count);
             
             if(characterFace != null)
-                characterFace.ActiveTalk(true);
+                characterFace.ActiveFace("Talk", true);
 
             SpeechBubbleController.SetName(characterName);
             SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);

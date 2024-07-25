@@ -887,6 +887,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9eb9b72a9f6804448b1e0dc59065435d, type: 2}
+    - target: {fileID: -259972160606440404, guid: 1e3ecfb36247f464089844313aa94f6c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1e3ecfb36247f464089844313aa94f6c, type: 3}
       propertyPath: m_Name
       value: Char_NPC_Influencer_2

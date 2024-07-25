@@ -137,5 +137,23 @@ public class CharacterBlink : MonoBehaviour
             mouth.mainTexture = defaultFace.face_Lower;
         }
     }
+
+    public void ActiveFace(string faceName, bool active)
+    {
+        switch (faceName)
+        {
+            case "Talk":
+                mouth.mainTexture = active ? talkFace.face_Lower : defaultFace.face_Lower;
+                break;
+
+            case "Blink":
+                eye.mainTexture = active ? blinkFace.face_Upper : defaultFace.face_Upper;
+                break;
+
+            default:
+                Debug.LogWarning($"Unexpected faceName: {faceName}");
+                break;
+        }
+    }
 }
 
