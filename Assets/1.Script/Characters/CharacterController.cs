@@ -187,8 +187,7 @@ public class CharacterController : MonoBehaviour
         Debug.Log(currentSituration.dialogues.Count);
         Debug.Log(currentDialogueIndex);
 
-
-        while (currentSituration.dialogues.Count > currentDialogueIndex)
+        while (currentDialogueIndex < currentSituration.dialogues.Count)
         {
             switch (_speechType)
             {
@@ -201,36 +200,37 @@ public class CharacterController : MonoBehaviour
                     Debug.Log(currentSituration.dialogues[currentDialogueIndex]);
 
                     // 다음 대사 혹은 스킵 사용
-                    yield return new WaitUntil(() => 
-                        Input.GetMouseButtonDown(0) ||
-                        Input.touchCount > 0 ||
-                        GameManager.Instance.uIManager.IsSkipRequested() 
+                    yield return new WaitUntil(() =>
+                        GameManager.Instance.uIManager.IsNextDialogueRequested() ||
+                        GameManager.Instance.uIManager.IsSkipRequested()
                     );
-                    yield return null;
-                    GameManager.Instance.uIManager.DisableDialogue();
-                    break;
+                    break; // case break
 
                 case SpeechType.personal:
                     if (characterFace != null)
                         characterFace.ActiveTalk(true);
-                   
+
                     SpeechBubbleController.SetName(characterName);
                     SpeechBubbleController.SetText(currentSituration.dialogues[currentDialogueIndex]);
                     SpeechBubbleController.FlickBubble();
-                    break;
+                    break; // case break
             }
-            if (GameManager.Instance.uIManager.isSkipRequested)
+
+            currentDialogueIndex++; // 다음 대사로 변경
+
+            if (GameManager.Instance.uIManager.IsSkipRequested())
             {
-            // while문 break
-                break;
+                Debug.Log("Skip requeset    " + GameManager.Instance.uIManager.IsSkipRequested());
+                break; // while break
             }
 
-
-            cam.Priority = 9;
-            currentDialogueIndex++;
+            GameManager.Instance.uIManager.DisableDialogue();
         }
-        currentSiturationIndex++;
-        currentDialogueIndex = 0;
+
+        GameManager.Instance.uIManager.DisableDialogue();
+        cam.Priority = 9; // 카메라 순서 변경
+        currentSiturationIndex++; // 다음 대사집으로 변경
+        currentDialogueIndex = 0; // 대사 순서 초기화
 
         if (characterFace != null)
             characterFace.ActiveTalk(false);
