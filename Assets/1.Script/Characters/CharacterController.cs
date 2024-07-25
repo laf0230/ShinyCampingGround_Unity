@@ -188,7 +188,6 @@ public class CharacterController : MonoBehaviour
                     if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
                     {
                         // 텍스트가 작성되지 않음 && (다음 버튼을 눌렀을 때 || 스킵 버튼을 눌렀을 때)
-                        yield return new WaitUntil(() => !GameManager.Instance.uIManager.dialogueManager.IsTyping());
                         yield return null;
                         yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
                     }
