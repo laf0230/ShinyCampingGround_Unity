@@ -57,19 +57,22 @@ public class CharacterController : MonoBehaviour
     CharacterBlink characterFace;
     AudioSource audioSource;
     public bool isRandomAction = false;
-    public bool isMetFirst = false;
+    public bool isMetFirst = true;
 
     protected virtual void Start()
     {
+
         characterFace = GetComponent<CharacterBlink>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
         randomAnimSec = new WaitForSeconds(randomAnimDuration);
         totalRandomAnimSec = new WaitForSeconds(totalRandomAnimDuration);
+        cam.Priority = 9;
     }
 
     public void OnEnable()
     {
+        isMetFirst = true;
         rb = GetComponent<Rigidbody>();
         animator = Character.GetComponent<Animator>();
         cam = GetComponentInChildren<CinemachineVirtualCamera>();

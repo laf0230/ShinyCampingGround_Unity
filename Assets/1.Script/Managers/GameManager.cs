@@ -50,10 +50,8 @@ public class GameManager : MonoBehaviour
         }
         else if (instance != this)
         {
-            Destroy(gameObject); 
+            Destroy(gameObject);
         }
-
-
     }
 
     private void Start()
@@ -71,7 +69,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             Time.timeScale = 3.0f;
         }
@@ -89,60 +87,65 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameSequence()
     {
-        yield return StartCoroutine(SpawnNPC(npcs[0], spawnPoint: entrance.gameObject.transform.position, npcIndex: 0));
+        yield return StartCoroutine(SpawnNPC(npcs[0], entrance.gameObject.transform.position, 0));
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(17f);
 
-        yield return StartCoroutine(SpawnNPC(npcs[1], spawnPoint: entrance.gameObject.transform.position, npcIndex: 1));
+        yield return StartCoroutine(SpawnNPC(npcs[1], entrance.gameObject.transform.position, 1));
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(26f);
 
-        yield return StartCoroutine(SpawnNPC(npcs[2], spawnPoint: negativeEntrance.transform.position, npcIndex: 2));
+        yield return StartCoroutine(SpawnNPC(npcs[2], negativeEntrance.transform.position, 2));
         yield return new WaitForSeconds(10f);
 
-        yield return StartCoroutine(SpawnNPC(npcs[3], spawnPoint: entrance.gameObject.transform.position, npcIndex: 3));
+        yield return StartCoroutine(SpawnNPC(npcs[3], entrance.gameObject.transform.position, 3));
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(17f);
 
-        yield return StartCoroutine(SpawnNPC(npcs[4], spawnPoint: entrance.gameObject.transform.position, npcIndex: 4));
+        yield return StartCoroutine(SpawnNPC(npcs[4], entrance.gameObject.transform.position, 4));
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(26f);
 
-        yield return StartCoroutine(SpawnNPC(npcs[5], spawnPoint: negativeEntrance.transform.position, npcIndex: 5));
+        yield return StartCoroutine(SpawnNPC(npcs[5], negativeEntrance.transform.position, 5));
     }
 
     public IEnumerator SpawnNPC(GameObject npc, Vector3 spawnPoint, int npcIndex)
     {
-        if (npc.GetComponent<NegativeCharacterController>() != null)
+        GameObject character = Instantiate(npc, spawnPoint, entrance.transform.rotation * Quaternion.Euler(0, -90, 0));
+        CharacterController controller = character.GetComponent<CharacterController>();
+        NegativeCharacterController negativeController = character.GetComponent<NegativeCharacterController>();
+
+        Debug.Log(npc.name == "Influencer" && isMetInpluencer == false);
+
+        if (controller != null)
+        {
+            if ((npc.name == "Influencer" && isMetInpluencer == false) || (npc.name == "PetOwner" && isMetPetOwner == false))
+            {
+                // 처음 등장한 손님
+                SoundManager.Instance.PlaySFXMusic("PositiveEnter");
+                uIManager.Alert("새로운 손님이 왔어요!", alertType.main);
+                uIManager.AddCoin(100);
+                if(character.name == "Influencer")
+                {
+                    isMetInpluencer = true;
+                }else if(character.name == "PetOwner")
+                {
+                    isMetPetOwner = true;
+                }
+            }
+            else
+            {
+                // 중복 등장 캐릭터
+                SoundManager.Instance.PlaySFXMusic("PositiveEnter");
+                uIManager.Alert("손님이 왔어요!", alertType.sub);
+                uIManager.AddCoin(100);
+            }
+        }
+        else if (negativeController != null)
         {
             // 도둑
             SoundManager.Instance.PlaySFXMusic("NegativeEnter");
             uIManager.Alert("도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", alertType.sub);
-        }
-        else if(!npc.GetComponent<CharacterController>().isMetFirst)
-        {
-            // 중복 등장 캐릭터
-            SoundManager.Instance.PlaySFXMusic("PositiveEnter");
-            uIManager.Alert("손님이 왔어요!", alertType.sub);
-            uIManager.AddCoin(100);
-        }
-        else
-        {
-            // 처음 온 손님
-            SoundManager.Instance.PlaySFXMusic("PositiveEnter");
-            uIManager.Alert("새로운 손님이 왔어요!", alertType.main);
-            uIManager.AddCoin(100);
-        }
-
-        Quaternion rotation = entrance.transform.rotation * Quaternion.Euler(0, -90, 0);
-
-        GameObject character = Instantiate(npc, spawnPoint, rotation);
-        CharacterController controller = character.GetComponent<CharacterController>();
-        NegativeCharacterController negativeController = character.GetComponent<NegativeCharacterController>();
-
-        if (controller != null)
-        {
-            controller.SetFirstMet(false);
         }
 
         yield return spawnDelay;
@@ -159,3 +162,4 @@ public class GameManager : MonoBehaviour
         }
     }
 }
+
