@@ -79,7 +79,7 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        if(GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() && GameManager.Instance.uIManager.dialogueManager.IsTyping())
+        if (GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() && GameManager.Instance.uIManager.dialogueManager.IsTyping())
         {
             GameManager.Instance.uIManager.dialogueManager.SetCompleteDialogue();
         }
@@ -175,13 +175,14 @@ public class CharacterController : MonoBehaviour
 
         while (currentDialogueIndex < currentSituration.dialogues.Count)
         {
+            if (characterFace != null)
+                characterFace.ActiveFace("Talk", true);
+
             switch (_speechType)
             {
                 case SpeechType.global:
                     cam.Priority = 11;
                     GameManager.Instance.uIManager.dialogueManager.ActiveDialogue(characterName, currentSituration.dialogues[currentDialogueIndex]);
-                    if (characterFace != null)
-                        characterFace.ActiveFace("Talk", true);
 
                     Debug.Log(currentSituration.dialogues[currentDialogueIndex]);
                     // 텍스트가 자동으로 흘러가게 설정할 때 코드
@@ -208,7 +209,11 @@ public class CharacterController : MonoBehaviour
                     break; // case break
             }
 
+            if (characterFace != null)
+                characterFace.ActiveFace("Talk", false);
+
             currentDialogueIndex++; // 다음 대사로 변경
+
 
             if (GameManager.Instance.uIManager.dialogueManager.IsSkipRequested())
             {
@@ -223,9 +228,6 @@ public class CharacterController : MonoBehaviour
         cam.Priority = 9; // 카메라 순서 변경
         currentSiturationIndex++; // 다음 대사집으로 변경
         currentDialogueIndex = 0; // 대사 순서 초기화
-
-        if (characterFace != null)
-            characterFace.ActiveFace("Talk", false);
     }
 
 
@@ -249,11 +251,13 @@ public class CharacterController : MonoBehaviour
                     transform.position = furniture.transform.position;
                     transform.rotation = furniture.transform.rotation;
                     animator.SetBool("IsSit", true);
+                    yield return randomAnimSec;
                     break;
                 case "Lie":
                     transform.position = furniture.transform.position;
                     transform.rotation = furniture.transform.rotation;
                     animator.SetBool("IsLie", true);
+                    yield return randomAnimSec;
                     break;
                 case "Tent":
                     transform.position = furniture.transform.position;
@@ -262,9 +266,12 @@ public class CharacterController : MonoBehaviour
                         tentTool.SetActive(true);
 
                     animator.SetBool("IsTent", true);
+                    yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0).Length + 1f);
+                    break;
+                default:
+                    yield return randomAnimSec;
                     break;
             }
-            yield return randomAnimSec;
             rb.isKinematic = false;
             if (tentTool != null)
                 tentTool.SetActive(false);
@@ -281,8 +288,8 @@ public class CharacterController : MonoBehaviour
         if (active)
         {
             int randomIndex = Random.Range(0, randomSpeech.dialogues.Count);
-            
-            if(characterFace != null)
+
+            if (characterFace != null)
                 characterFace.ActiveFace("Talk", true);
 
             SpeechBubbleController.SetName(characterName);
@@ -291,8 +298,8 @@ public class CharacterController : MonoBehaviour
         }
         else
         {
-            if(characterFace != null)
-                characterFace.ActiveTalk(false);
+            if (characterFace != null)
+                characterFace.ActiveFace("Talk", false);
 
             SpeechBubbleController.DisableBubble();
         }

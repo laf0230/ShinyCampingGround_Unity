@@ -263,12 +263,24 @@ MonoBehaviour:
   - faceType: Default
     face_Upper: {fileID: 2800000, guid: 5e7e5a56fa85c444d94c6cc698b44aad, type: 3}
     face_Lower: {fileID: 2800000, guid: 5e7e5a56fa85c444d94c6cc698b44aad, type: 3}
+    face_Upper_Normal: {fileID: 2800000, guid: 3fb1666bf5bc1fd49a4c7b87f6b2e7f4, type: 3}
+    face_Lower_Normal: {fileID: 2800000, guid: 3fb1666bf5bc1fd49a4c7b87f6b2e7f4, type: 3}
+    face_Upper_Mask: {fileID: 2800000, guid: 4451686ecd168cc438f8d789c7c1ce64, type: 3}
+    face_Lower_Mask: {fileID: 2800000, guid: 4451686ecd168cc438f8d789c7c1ce64, type: 3}
   - faceType: Blink
     face_Upper: {fileID: 2800000, guid: e5d590e3ae002b04dac94818b5c93760, type: 3}
     face_Lower: {fileID: 0}
+    face_Upper_Normal: {fileID: 2800000, guid: 6e7d13839d2b14440a4ad39f6afddf42, type: 3}
+    face_Lower_Normal: {fileID: 0}
+    face_Upper_Mask: {fileID: 2800000, guid: bb3856c98fab66c4292a51a2798f5ddc, type: 3}
+    face_Lower_Mask: {fileID: 0}
   - faceType: Talk
     face_Upper: {fileID: 0}
     face_Lower: {fileID: 2800000, guid: ba05022b7e5c7a54fb8d4b46e08547b3, type: 3}
+    face_Upper_Normal: {fileID: 0}
+    face_Lower_Normal: {fileID: 2800000, guid: 654b333f7639dd147ab176e73ad84304, type: 3}
+    face_Upper_Mask: {fileID: 0}
+    face_Lower_Mask: {fileID: 2800000, guid: 6be6e605b020ec143b9f047a0b62b6c9, type: 3}
 --- !u!1 &7770092247125644335
 GameObject:
   m_ObjectHideFlags: 0
