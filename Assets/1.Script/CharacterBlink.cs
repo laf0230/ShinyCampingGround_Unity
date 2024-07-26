@@ -6,14 +6,17 @@ using UnityEngine;
 [System.Serializable]
 public class Face
 {
+    [Header("Face Type")]
     public string faceType;
+
+    [Header("Upper")]
     public Texture2D face_Upper;
-    public Texture2D face_Lower;
-
-    public Texture2D face_Upper_Normal;
-    public Texture2D face_Lower_Normal;
-
     public Texture2D face_Upper_Mask;
+    public Texture2D face_Upper_Normal;
+
+    [Header("Lower")]
+    public Texture2D face_Lower;
+    public Texture2D face_Lower_Normal;
     public Texture2D face_Lower_Mask;
 }
 
@@ -58,9 +61,12 @@ public class CharacterBlink : MonoBehaviour
             SetFaceTextures(eye, defaultFace.face_Upper, defaultFace.face_Upper_Normal, defaultFace.face_Upper_Mask);
             SetFaceTextures(mouth, defaultFace.face_Lower, defaultFace.face_Lower_Normal, defaultFace.face_Lower_Mask);
         }
+    }
 
-        ActiveBlink(true); // 초기값으로 눈 깜빡임을 활성화
-        ActiveTalk(false); // 초기값으로 입 움직임을 비활성화
+    private void OnEnable()
+    {
+        ActiveBlink(true);
+        ActiveTalk(false);
     }
 
     public void ActiveBlink(bool isActive)

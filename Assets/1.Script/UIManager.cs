@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
 
     public DialogueManager dialogueManager;
 
+    public Button changePlayerCharacterBtn;
 
     public float alertTime = 0;
     public WaitForSeconds alertDuration = new WaitForSeconds(3);
@@ -71,8 +72,10 @@ public class UIManager : MonoBehaviour
     {
         ChangeUI("Title");
         coinAlermDuration = new WaitForSeconds(coinAlermTime);
+        changePlayerCharacterBtn.onClick.AddListener(ChangeCharacter);
     }
 
+    #region UI
     public void ChangeUI(string name)
     {
         if(name == "Title")
@@ -93,6 +96,15 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene("Main");
+    }
+
+    #endregion
+
+    #region Coin
 
     public void AddCoin(int _coin)
     {
@@ -125,6 +137,9 @@ public class UIManager : MonoBehaviour
             uiCoin2.text = "-"+this.score.ToString();
     }
 
+    #endregion
+
+    #region Alert
     public void Alert(string msg, alertType alertType)
     {
         switch (alertType)
@@ -155,15 +170,21 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ResetGame()
-    {
-        SceneManager.LoadScene("Main");
-    }
-
     public IEnumerator IEDoAlert(GameObject alert)
     {
         alert.SetActive(true);
         yield return alertDuration;
         alert.SetActive(false);
+    }
+ 
+    #endregion
+
+    public void ChangeCharacter()
+    {
+        var player = GameObject.FindGameObjectWithTag("Player");
+        var controller = player.GetComponent<PlayerController>();
+
+        controller.SwitchCharacter();
+
     }
 }

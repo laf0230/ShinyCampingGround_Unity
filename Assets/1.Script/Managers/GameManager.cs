@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public NavMeshSurface navmesh;
     public List<GameObject> npcs;
 
-    public bool isMetInpluencer = false;
+    public bool isMetInfluencer = false;
     public bool isMetPetOwner = false;
 
     private WaitForSeconds spawnDelay = new WaitForSeconds(3f);
@@ -115,11 +115,11 @@ public class GameManager : MonoBehaviour
         CharacterController controller = character.GetComponent<CharacterController>();
         NegativeCharacterController negativeController = character.GetComponent<NegativeCharacterController>();
 
-        Debug.Log(npc.name == "Influencer" && isMetInpluencer == false);
+        Debug.Log(npc.name == "Influencer" && isMetInfluencer == false);
 
         if (controller != null && negativeController == null)
         {
-            if ((npc.name == "Influencer" && isMetInpluencer == false) || (npc.name == "PetOwner" && isMetPetOwner == false))
+            if ((npc.name == "Influencer" && isMetInfluencer == false) || (npc.name == "PetOwner" && isMetPetOwner == false))
             {
                 // 처음 등장한 손님
                 SoundManager.Instance.PlaySFXMusic("PositiveEnter");
@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
                 uIManager.AddCoin(100);
                 if(character.name == "Influencer")
                 {
-                    isMetInpluencer = true;
+                    isMetInfluencer = true;
                 }else if(character.name == "PetOwner")
                 {
                     isMetPetOwner = true;

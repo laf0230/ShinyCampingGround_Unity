@@ -1,15 +1,18 @@
 using UnityEngine;
 using Cinemachine;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     private Vector2 moveInput;
-    public Camera freeLookCamera;
+    private Camera freeLookCamera;
+    public List<GameObject> characters;
     public GameObject playerObject;
     public SODialogue dialogues;
     public Joystick joystick;
     public NPCInteraction nPCInteraction;
+    public int currentCharacterIndex = 0;
 
     private Transform characterTransform;
     private Rigidbody rb;
@@ -99,6 +102,37 @@ public class PlayerController : MonoBehaviour
     {
         // Animator에 이동 상태 전달
         animator.SetBool("IsMove", isMoving);
+    }
+
+    public void SwitchCharacter()
+    {
+        Debug.Log("Current character index: " + currentCharacterIndex);
+        Debug.Log("Max character index: " + (characters.Count - 1));
+
+        if (currentCharacterIndex < characters.Count - 1)
+        {
+            currentCharacterIndex++;
+        }
+        else
+        {
+            currentCharacterIndex = 0;
+        }
+
+        var nextCharacter = characters[currentCharacterIndex];
+        Debug.Log(nextCharacter.name);
+        ChangeCharacterModel(nextCharacter);
+    }
+
+    public void ChangeCharacterModel(GameObject model)
+    {
+        var current_Model = playerObject; 
+        playerObject.SetActive(false);
+        playerObject = model;
+        playerObject.SetActive(true);
+        // Animation Change
+        animator = model.GetComponent<Animator>();
+
+        
     }
 }
 

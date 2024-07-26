@@ -8,10 +8,10 @@ public class InfluencerController : CharacterController
     {
         yield return Enter();
 
-        if (!GameManager.Instance.isMetInpluencer)
+        if (!GameManager.Instance.isMetInfluencer)
         {
             yield return Talk(SpeechType.global);
-            GameManager.Instance.isMetInpluencer = true;
+            GameManager.Instance.isMetInfluencer = true;
         }
         else
         {
