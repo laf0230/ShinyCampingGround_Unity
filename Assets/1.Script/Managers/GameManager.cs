@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log(npc.name == "Influencer" && isMetInpluencer == false);
 
-        if (controller != null)
+        if (controller != null && negativeController == null)
         {
             if ((npc.name == "Influencer" && isMetInpluencer == false) || (npc.name == "PetOwner" && isMetPetOwner == false))
             {
