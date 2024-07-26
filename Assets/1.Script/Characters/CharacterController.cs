@@ -57,6 +57,7 @@ public class CharacterController : MonoBehaviour
     CharacterBlink characterFace;
     AudioSource audioSource;
     public bool isRandomAction = false;
+    public bool isMetFirst = false;
 
     protected virtual void Start()
     {
@@ -176,7 +177,7 @@ public class CharacterController : MonoBehaviour
         while (currentDialogueIndex < currentSituration.dialogues.Count)
         {
             if (characterFace != null)
-                characterFace.ActiveFace("Talk", true);
+                characterFace.ActiveTalk(true);
 
             switch (_speechType)
             {
@@ -201,7 +202,7 @@ public class CharacterController : MonoBehaviour
 
                 case SpeechType.personal:
                     if (characterFace != null)
-                        characterFace.ActiveFace("Talk", true);
+                        characterFace.ActiveTalk(true);
 
                     SpeechBubbleController.SetName(characterName);
                     SpeechBubbleController.SetText(currentSituration.dialogues[currentDialogueIndex]);
@@ -210,7 +211,7 @@ public class CharacterController : MonoBehaviour
             }
 
             if (characterFace != null)
-                characterFace.ActiveFace("Talk", false);
+                characterFace.ActiveTalk(false);
 
             currentDialogueIndex++; // 다음 대사로 변경
 
@@ -290,7 +291,7 @@ public class CharacterController : MonoBehaviour
             int randomIndex = Random.Range(0, randomSpeech.dialogues.Count);
 
             if (characterFace != null)
-                characterFace.ActiveFace("Talk", true);
+                characterFace.ActiveTalk(true);
 
             SpeechBubbleController.SetName(characterName);
             SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
@@ -299,7 +300,7 @@ public class CharacterController : MonoBehaviour
         else
         {
             if (characterFace != null)
-                characterFace.ActiveFace("Talk", false);
+                characterFace.ActiveTalk(false);
 
             SpeechBubbleController.DisableBubble();
         }
@@ -312,6 +313,11 @@ public class CharacterController : MonoBehaviour
         SpeechBubbleController.SetName(characterName);
         SpeechBubbleController.FlickBubble();
         SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
+    }
+
+    public void SetFirstMet(bool isFirstMet)
+    {
+        this.isMetFirst = isFirstMet;
     }
 }
 

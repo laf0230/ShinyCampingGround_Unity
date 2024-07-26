@@ -25,4 +25,9 @@ public class WayPointManager : MonoBehaviour
         }
             return null;
     }
+
+    public List<GameObject> GetWayPoint(int index)
+    {
+        return characterWayPoint[index].waypoints;
+    }
 }

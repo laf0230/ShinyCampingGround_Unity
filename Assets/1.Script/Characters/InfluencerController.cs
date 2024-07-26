@@ -7,7 +7,17 @@ public class InfluencerController : CharacterController
     public override IEnumerator ActionSequence()
     {
         yield return Enter();
-        yield return Talk(SpeechType.global);
+
+        if (!GameManager.Instance.isMetInpluencer)
+        {
+            yield return Talk(SpeechType.global);
+            GameManager.Instance.isMetInpluencer = true;
+        }
+        else
+        {
+            yield return Talk(SpeechType.personal);
+        }
+        
         yield return MoveTo(goals[0]);
         yield return MoveTo(goals[1]);
         yield return Talk(SpeechType.personal);

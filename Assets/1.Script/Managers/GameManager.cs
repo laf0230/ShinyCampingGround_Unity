@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,9 @@ public class GameManager : MonoBehaviour
     public GameObject ManagementOffice;
     public NavMeshSurface navmesh;
     public List<GameObject> npcs;
+
+    public bool isMetInpluencer = false;
+    public bool isMetPetOwner = false;
 
     private WaitForSeconds spawnDelay = new WaitForSeconds(3f);
 
@@ -85,26 +89,46 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameSequence()
     {
-        StartCoroutine(SpawnNPC(npcs[0], spawnPoint: entrance.gameObject.transform.position));
-        yield return null;
-        yield return new WaitUntil(() =>  entrance.IsOutCharacter());
+        yield return StartCoroutine(SpawnNPC(npcs[0], spawnPoint: entrance.gameObject.transform.position, npcIndex: 0));
+        yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(17f);
-        StartCoroutine(SpawnNPC(npcs[1], spawnPoint: entrance.gameObject.transform.position));
-        yield return null;
+
+        yield return StartCoroutine(SpawnNPC(npcs[1], spawnPoint: entrance.gameObject.transform.position, npcIndex: 1));
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(26f);
-        StartCoroutine(SpawnNPC(npcs[2], spawnPoint: negativeEntrance.transform.position));
+
+        yield return StartCoroutine(SpawnNPC(npcs[2], spawnPoint: negativeEntrance.transform.position, npcIndex: 2));
+        yield return new WaitForSeconds(10f);
+
+        yield return StartCoroutine(SpawnNPC(npcs[3], spawnPoint: entrance.gameObject.transform.position, npcIndex: 3));
+        yield return new WaitUntil(() => entrance.IsOutCharacter());
+        yield return new WaitForSeconds(17f);
+
+        yield return StartCoroutine(SpawnNPC(npcs[4], spawnPoint: entrance.gameObject.transform.position, npcIndex: 4));
+        yield return new WaitUntil(() => entrance.IsOutCharacter());
+        yield return new WaitForSeconds(26f);
+
+        yield return StartCoroutine(SpawnNPC(npcs[5], spawnPoint: negativeEntrance.transform.position, npcIndex: 5));
     }
 
-    public IEnumerator SpawnNPC(GameObject npc, Vector3 spawnPoint)
+    public IEnumerator SpawnNPC(GameObject npc, Vector3 spawnPoint, int npcIndex)
     {
         if (npc.GetComponent<NegativeCharacterController>() != null)
         {
+            // 도둑
             SoundManager.Instance.PlaySFXMusic("NegativeEnter");
             uIManager.Alert("도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", alertType.sub);
         }
+        else if(!npc.GetComponent<CharacterController>().isMetFirst)
+        {
+            // 중복 등장 캐릭터
+            SoundManager.Instance.PlaySFXMusic("PositiveEnter");
+            uIManager.Alert("손님이 왔어요!", alertType.sub);
+            uIManager.AddCoin(100);
+        }
         else
         {
+            // 처음 온 손님
             SoundManager.Instance.PlaySFXMusic("PositiveEnter");
             uIManager.Alert("새로운 손님이 왔어요!", alertType.main);
             uIManager.AddCoin(100);
@@ -116,15 +140,20 @@ public class GameManager : MonoBehaviour
         CharacterController controller = character.GetComponent<CharacterController>();
         NegativeCharacterController negativeController = character.GetComponent<NegativeCharacterController>();
 
+        if (controller != null)
+        {
+            controller.SetFirstMet(false);
+        }
+
         yield return spawnDelay;
 
-        if(controller != null)
+        if (controller != null)
         {
-            controller.goals = wayPointManager.GetWayPoint(npc.name);
-            // Debug.Log(controller.goals.ToString());
+            controller.goals = wayPointManager.GetWayPoint(npcIndex);
+            Debug.Log(npcIndex);
             controller.StartAction();
         }
-        else if(negativeController != null)
+        else if (negativeController != null)
         {
             Debug.Log(negativeController.gameObject.name);
         }

@@ -7,8 +7,18 @@ public class PetOwnerController : CharacterController
     public override IEnumerator ActionSequence()
     {
         yield return Enter();
-        yield return Talk(SpeechType.global);
-        yield return MoveTo(goals[0]);
+
+        if (!GameManager.Instance.isMetPetOwner)
+        {
+            yield return Talk(SpeechType.global);
+            GameManager.Instance.isMetPetOwner = true;
+        }
+        else
+        {
+            yield return Talk(SpeechType.personal);
+        }
+
+         yield return MoveTo(goals[0]);
         yield return Talk(SpeechType.personal);
         yield return new WaitForSeconds(2f);
         yield return Build(kit: campKit);

@@ -55,6 +55,8 @@ public class CharacterBlink : MonoBehaviour
             {
                 talkFace = face;
             }
+            SetFaceTextures(eye, defaultFace.face_Upper, defaultFace.face_Upper_Normal, defaultFace.face_Upper_Mask);
+            SetFaceTextures(mouth, defaultFace.face_Lower, defaultFace.face_Lower_Normal, defaultFace.face_Lower_Mask);
         }
 
         ActiveBlink(true); // ÃÊ±â°ªÀ¸·Î ´« ±ôºýÀÓÀ» È°¼ºÈ­
@@ -140,7 +142,7 @@ public class CharacterBlink : MonoBehaviour
         {
             // Normal state
             SetFaceTextures(mouth, defaultFace.face_Lower, defaultFace.face_Lower_Normal, defaultFace.face_Lower_Mask);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
 
             // Talk state
             SetFaceTextures(mouth, talkFace.face_Lower, talkFace.face_Lower_Normal, talkFace.face_Lower_Mask);
