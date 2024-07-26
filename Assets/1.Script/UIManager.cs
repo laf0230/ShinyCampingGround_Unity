@@ -24,6 +24,9 @@ public class UIManager : MonoBehaviour
 
     public DialogueManager dialogueManager;
 
+    public GameObject Graphy;
+    public Button graphySwitchBtrn;
+
     public Button changePlayerCharacterBtn;
 
     public float alertTime = 0;
@@ -73,6 +76,7 @@ public class UIManager : MonoBehaviour
         ChangeUI("Title");
         coinAlermDuration = new WaitForSeconds(coinAlermTime);
         changePlayerCharacterBtn.onClick.AddListener(ChangeCharacter);
+        graphySwitchBtrn.onClick.AddListener(SwitchDebugMode);
     }
 
     #region UI
@@ -186,5 +190,10 @@ public class UIManager : MonoBehaviour
 
         controller.SwitchCharacter();
 
+    }
+
+    public void SwitchDebugMode()
+    {
+        Graphy.SetActive(!Graphy.activeSelf);
     }
 }

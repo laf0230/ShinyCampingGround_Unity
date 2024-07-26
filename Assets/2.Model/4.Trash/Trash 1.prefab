@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6504196545823717449}
   - component: {fileID: 1783904451730299449}
   - component: {fileID: 527519261512482144}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 572295681517129906}
   - component: {fileID: 5086253091950538569}
   - component: {fileID: 2382948939195891711}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2483758511144603770}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -286,7 +286,7 @@ GameObject:
   - component: {fileID: 5872288066219825764}
   - component: {fileID: 1529308930754918360}
   - component: {fileID: 5040109757510091726}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 7415703576358820855}
   - component: {fileID: 8282190649747636685}
   - component: {fileID: 8141440389164904621}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -477,7 +477,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3301941933928637092}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -787,9 +787,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -1.991
       objectReference: {fileID: 0}
+    - target: {fileID: -1745591211327655826, guid: 68c3190663a96b84182347d15ca6b7b6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 68c3190663a96b84182347d15ca6b7b6, type: 3}
       propertyPath: m_Name
       value: BeerBottle2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 68c3190663a96b84182347d15ca6b7b6, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -935,9 +943,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -1.991
       objectReference: {fileID: 0}
+    - target: {fileID: -1745591211327655826, guid: 68c3190663a96b84182347d15ca6b7b6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 68c3190663a96b84182347d15ca6b7b6, type: 3}
       propertyPath: m_Name
       value: BeerBottle2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 68c3190663a96b84182347d15ca6b7b6, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1046,6 +1062,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 20ea653ef4e38334199127f09852306d, type: 3}
       propertyPath: m_Name
       value: BarbecueTongs3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 20ea653ef4e38334199127f09852306d, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8178692506802091170, guid: 20ea653ef4e38334199127f09852306d, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -272,6 +272,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 958755921848740018, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7795075
+      objectReference: {fileID: 0}
+    - target: {fileID: 958755921848740018, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 958755921848740018, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.6263929
+      objectReference: {fileID: 0}
+    - target: {fileID: 958755921848740018, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 958755921848740018, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -77.569
+      objectReference: {fileID: 0}
     - target: {fileID: 1445840345423886362, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
       propertyPath: m_Name
       value: Terrain (1)
@@ -315,6 +335,26 @@ PrefabInstance:
     - target: {fileID: 2151047713377696592, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249524770519823559, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6826874
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249524770519823559, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249524770519823559, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7307106
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249524770519823559, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249524770519823559, guid: 1f9353ed4da047142bebc6a4d984ef2c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -93.892
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1609,6 +1649,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 408373771}
   m_CullTransparentMesh: 1
+--- !u!1 &435542999 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+  m_PrefabInstance: {fileID: 851800859}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &440691866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2315,6 +2360,7 @@ GameObject:
   - component: {fileID: 796553421}
   - component: {fileID: 796553423}
   - component: {fileID: 796553422}
+  - component: {fileID: 796553424}
   m_Layer: 5
   m_Name: Leaf
   m_TagString: Untagged
@@ -2380,6 +2426,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 796553420}
   m_CullTransparentMesh: 1
+--- !u!114 &796553424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796553420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 796553422}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &819638824
 GameObject:
   m_ObjectHideFlags: 0
@@ -2553,6 +2643,10 @@ PrefabInstance:
     - target: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_Name
       value: '[Graphy]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11496292, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_advancedModuleState
@@ -3680,6 +3774,8 @@ MonoBehaviour:
   uiCoin: {fileID: 1197828291}
   uiCoin2: {fileID: 1677650083}
   dialogueManager: {fileID: 894630308}
+  Graphy: {fileID: 435542999}
+  graphySwitchBtrn: {fileID: 796553424}
   changePlayerCharacterBtn: {fileID: 390853024}
   alertTime: 0
   coin: 0
@@ -7243,7 +7339,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2010802450}
   m_Layer: 0
-  m_Name: '[ ---------- Player ---------- ]'
+  m_Name: '[ ------------ Player ------------ ]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
