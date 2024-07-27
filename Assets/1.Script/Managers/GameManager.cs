@@ -144,6 +144,10 @@ public class GameManager : MonoBehaviour
         else if (negativeController != null)
         {
             // 도둑
+            SoundManager.Instance.PlaySFXMusic("NegativeEnter");
+            uIManager.ToggleAlert(alertType.sub, "도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", true);
+
+
         }
 
         yield return spawnDelay;
