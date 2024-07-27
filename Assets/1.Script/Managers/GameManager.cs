@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 3.0f;
         }
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             Time.timeScale = 1.0f;
         }
@@ -145,9 +145,7 @@ public class GameManager : MonoBehaviour
         {
             // 도둑
             SoundManager.Instance.PlaySFXMusic("NegativeEnter");
-            uIManager.ToggleAlert(alertType.sub, "도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", true);
-
-
+            uIManager.Alert("도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", alertType.sub);
         }
 
         yield return spawnDelay;

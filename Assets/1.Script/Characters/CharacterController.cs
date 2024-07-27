@@ -68,7 +68,6 @@ public class CharacterController : MonoBehaviour
         randomAnimSec = new WaitForSeconds(randomAnimDuration);
         totalRandomAnimSec = new WaitForSeconds(totalRandomAnimDuration);
         cam.Priority = 9;
-        characterFace.ActiveBlink(true);
     }
 
     public void OnEnable()
@@ -78,6 +77,8 @@ public class CharacterController : MonoBehaviour
         animator = Character.GetComponent<Animator>();
         cam = GetComponentInChildren<CinemachineVirtualCamera>();
 
+        if (characterFace != null)
+            characterFace.ActiveBlink(true);
     }
 
     private void Update()
