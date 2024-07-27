@@ -75,6 +75,9 @@ public class CharacterBlink : MonoBehaviour
 
     private void OnEnable()
     {
+        ActiveBlink(false);
+        ActiveTalk(false);
+
         ActiveBlink(true);
         ActiveTalk(false);
     }

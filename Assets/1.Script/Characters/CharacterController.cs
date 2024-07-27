@@ -167,8 +167,10 @@ public class CharacterController : MonoBehaviour
         audioSource.Stop();
     }
 
-    protected IEnumerator Talk(SpeechType _speechType)
+    protected IEnumerator Talk(SpeechType speechType)
     {
+        var _speechType = speechType;
+
         Debug.Log(gameObject.name + " : state Enter: Talk");
         // situration setting
         SODialogue currentSituration = dialogues[currentSiturationIndex];
@@ -223,11 +225,14 @@ public class CharacterController : MonoBehaviour
                 Debug.Log("Skip requeset " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
                 break; // while break
             }
-
-            GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
+            
+            if(speechType == SpeechType.global)
+                GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
         }
 
-        GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
+        if(speechType == SpeechType.global)
+            GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
+
         cam.Priority = 9; // 카메라 순서 변경
         currentSiturationIndex++; // 다음 대사집으로 변경
         currentDialogueIndex = 0; // 대사 순서 초기화
