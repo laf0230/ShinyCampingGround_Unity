@@ -23,6 +23,7 @@ public class NegativeCharacterController : CharacterController
     public override IEnumerator ActionSequence()
     {
         Debug.Log("좀도둑 활동 시작!");
+            SoundManager.Instance.PlaySFXMusic("NegativeEnter");
         GameManager.Instance.uIManager.ToggleAlert(alertType.sub, "도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", true);
 
         yield return Enter();
