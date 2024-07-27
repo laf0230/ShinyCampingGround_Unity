@@ -73,9 +73,6 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        Graphy = GameObject.Find("[Graphy]");
-        Graphy.SetActive(false);
-
         ChangeUI("Title");
         coinAlermDuration = new WaitForSeconds(coinAlermTime);
         changePlayerCharacterBtn.onClick.AddListener(ChangeCharacter);
