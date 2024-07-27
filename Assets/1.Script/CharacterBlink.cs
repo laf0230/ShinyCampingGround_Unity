@@ -42,7 +42,8 @@ public class CharacterBlink : MonoBehaviour
     private string NORMAL_MAP_KEYWORD = "_NORMALMAP";
 
     // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
         foreach (Face face in faces)
         {
@@ -58,8 +59,17 @@ public class CharacterBlink : MonoBehaviour
             {
                 talkFace = face;
             }
+        }
+
+        // Ensure defaultFace is set
+        if (defaultFace != null)
+        {
             SetFaceTextures(eye, defaultFace.face_Upper, defaultFace.face_Upper_Normal, defaultFace.face_Upper_Mask);
             SetFaceTextures(mouth, defaultFace.face_Lower, defaultFace.face_Lower_Normal, defaultFace.face_Lower_Mask);
+        }
+        else
+        {
+            Debug.LogError("Default face is not set.");
         }
     }
 
@@ -73,9 +83,14 @@ public class CharacterBlink : MonoBehaviour
     {
         if (isActive)
         {
+            if (blinkFace == null)
+            {
+                Debug.LogError("Blink face is not set.");
+                return;
+            }
+
             if (blinkCoroutine == null)
             {
-                Debug.Log(blinkCoroutine + "     ");
                 blinkCoroutine = StartCoroutine(BlinkAnimation());
             }
         }
@@ -95,7 +110,7 @@ public class CharacterBlink : MonoBehaviour
     {
         if (faces == null)
         {
-            Debug.Log("Error: Face Class is null");
+            Debug.LogError("Error: Face Class is null");
             return;
         }
 
@@ -103,8 +118,15 @@ public class CharacterBlink : MonoBehaviour
         {
             if (isActive)
             {
+                if (talkFace == null)
+                {
+                    Debug.LogError("Talk face is not set.");
+                    return;
+                }
+
                 if (talkFaceCoroutine == null)
                 {
+                    Debug.Log("Start");
                     talkFaceCoroutine = StartCoroutine(TalkAnimation());
                 }
             }
@@ -112,6 +134,7 @@ public class CharacterBlink : MonoBehaviour
             {
                 if (talkFaceCoroutine != null)
                 {
+                    Debug.Log("End");
                     StopCoroutine(talkFaceCoroutine);
                     talkFaceCoroutine = null;
                     // Talk를 중지하고 기본 얼굴로 설정
@@ -121,12 +144,13 @@ public class CharacterBlink : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError("Default Face is null");
+            Debug.LogError("Exception: " + e.Message);
         }
     }
 
     private IEnumerator BlinkAnimation()
     {
+        Debug.Log("Blink");
         while (true)
         {
             // Normal state
@@ -162,7 +186,7 @@ public class CharacterBlink : MonoBehaviour
     private void SetFaceTextures(Material material, Texture2D mainTexture, Texture2D normalMap, Texture2D maskMap)
     {
         material.mainTexture = mainTexture;
-        
+
         if (maskMap != null)
         {
             material.SetTexture(MASK_MAP, maskMap);
@@ -208,5 +232,4 @@ public class CharacterBlink : MonoBehaviour
         }
     }
 }
-
 
