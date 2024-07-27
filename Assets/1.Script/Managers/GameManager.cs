@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 3.0f;
         }
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             Time.timeScale = 1.0f;
         }

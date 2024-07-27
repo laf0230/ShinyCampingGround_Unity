@@ -780,7 +780,7 @@ namespace Tayx.Graphy
         {
             if( m_keepAlive )
             {
-                DontDestroyOnLoad( transform.root.gameObject );
+                // DontDestroyOnLoad( transform.root.gameObject );
             }
 
             m_fpsMonitor = GetComponentInChildren<G_FpsMonitor>( true );

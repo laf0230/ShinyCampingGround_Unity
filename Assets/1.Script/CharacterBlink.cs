@@ -42,7 +42,7 @@ public class CharacterBlink : MonoBehaviour
     private string NORMAL_MAP_KEYWORD = "_NORMALMAP";
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         foreach (Face face in faces)
         {
