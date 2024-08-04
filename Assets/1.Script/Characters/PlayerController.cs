@@ -40,12 +40,15 @@ public class PlayerController : MonoBehaviour
 
         if (Input.touchCount > 0 && nPCInteraction.isInterectionObj)
         {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
+            for (int i = 0; i < Input.touchCount; i++)
             {
-                Vector3 touchPosition = touch.position;
-                ClassifyObject(touchPosition);
+                Touch touch = Input.GetTouch(i);
+
+                if (touch.phase == TouchPhase.Began)
+                {
+                    Vector3 touchPosition = touch.position;
+                    ClassifyObject(touchPosition);
+                }
             }
         }
     }

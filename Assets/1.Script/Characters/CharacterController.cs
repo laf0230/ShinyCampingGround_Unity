@@ -192,18 +192,35 @@ public class CharacterController : MonoBehaviour
 
                     Debug.Log(currentSituration.dialogues[currentDialogueIndex]);
                     // 텍스트가 자동으로 흘러가게 설정할 때 코드
+
+                    // 텍스트가 완성되지 않았을 때 오토 해제 시 자동 넘어가기 취소
+
+                    // 텍스트가 완성되지 않았을 때 오토 해제 시 자동 넘어가기 취소
                     if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
                     {
-                        // 텍스트가 작성되지 않음 && (다음 버튼을 눌렀을 때 || 스킵 버튼을 눌렀을 때)
+                        // 터치 혹은 스킵
                         yield return null;
                         yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
                     }
                     else
                     {
+                        // 오토 모드
                         yield return new WaitUntil(() => !GameManager.Instance.uIManager.dialogueManager.IsTyping());
-                        yield return new WaitForSeconds(1.5f);
+
+                        // 오토 모드가 해제되었는지 확인
+                        if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
+                        {
+                            // 오토 모드가 해제되었을 때, 사용자가 다음 대사나 스킵을 요청할 때까지 대기
+                            yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
+                        }
+                        else
+                        {
+                            // 오토 모드가 유지되는 경우, 일정 시간 대기 후 다음 대사로 이동
+                            yield return new WaitForSeconds(1.5f);
+                        }
                     }
-                    break; // case break
+                    break;
+                // case break
 
                 case SpeechType.personal:
                     if (characterFace != null)
@@ -275,7 +292,7 @@ public class CharacterController : MonoBehaviour
                         tentTool.SetActive(true);
 
                     animator.SetBool("IsTent", true);
-                    yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0).Length + 1f);
+                    yield return new WaitForSeconds((animator.GetCurrentAnimatorClipInfo(0).Length + 0.5f));
                     break;
                 default:
                     yield return randomAnimSec;

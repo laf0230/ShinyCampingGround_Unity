@@ -69,13 +69,21 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Time.timeScale = 3.0f;
+            Time.timeScale = 0.5f;
         }
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Time.timeScale = 1.0f;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Time.timeScale = 2f;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Time.timeScale = 5f;
         }
     }
 
@@ -125,10 +133,11 @@ public class GameManager : MonoBehaviour
                 SoundManager.Instance.PlaySFXMusic("PositiveEnter");
                 uIManager.Alert("새로운 손님이 왔어요!", alertType.main);
                 uIManager.AddCoin(100);
-                if(character.name == "Influencer")
+                if (character.name == "Influencer")
                 {
                     isMetInfluencer = true;
-                }else if(character.name == "PetOwner")
+                }
+                else if (character.name == "PetOwner")
                 {
                     isMetPetOwner = true;
                 }
@@ -145,7 +154,8 @@ public class GameManager : MonoBehaviour
         {
             // 도둑
             SoundManager.Instance.PlaySFXMusic("NegativeEnter");
-            uIManager.Alert("도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", alertType.sub);
+            uIManager.ToggleAlert(alertType.sub, "도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", true);
+
         }
 
         yield return spawnDelay;
