@@ -10,7 +10,7 @@ public enum SpeechType
     personal
 }
 
-public class CharacterController : MonoBehaviour
+public class NPCController : MonoBehaviour
 {
     public enum States
     {
@@ -243,12 +243,12 @@ public class CharacterController : MonoBehaviour
                 Debug.Log("Skip requeset " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
                 break; // while break
             }
-            
-            if(speechType == SpeechType.global)
+
+            if (speechType == SpeechType.global)
                 GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
         }
 
-        if(speechType == SpeechType.global)
+        if (speechType == SpeechType.global)
             GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
 
         cam.Priority = 9; // 카메라 순서 변경
@@ -256,58 +256,92 @@ public class CharacterController : MonoBehaviour
         currentDialogueIndex = 0; // 대사 순서 초기화
     }
 
-
     protected virtual IEnumerator RandomAction()
     {
         isRandomAction = true;
         KitController kitController = campKit.GetComponent<KitController>();
 
         float startTime = Time.time;
+        string prevFurnitureTag = null;
+
+        float animationCliplength = 0f;
 
         while (Time.time - startTime < totalRandomAnimDuration)
         {
+            // 중복되는 애니메이션 처리
             Transform furniture = kitController.kit[Random.Range(0, kitController.kit.Length)];
-            yield return MoveTo(furniture.gameObject);
             string furnitureTag = furniture.tag;
             Debug.Log(furnitureTag);
-            rb.isKinematic = true;
-            switch (furnitureTag)
-            {
-                case "Sit":
-                    transform.position = furniture.transform.position;
-                    transform.rotation = furniture.transform.rotation;
-                    animator.SetBool("IsSit", true);
-                    yield return randomAnimSec;
-                    break;
-                case "Lie":
-                    transform.position = furniture.transform.position;
-                    transform.rotation = furniture.transform.rotation;
-                    animator.SetBool("IsLie", true);
-                    yield return randomAnimSec;
-                    break;
-                case "Tent":
-                    transform.position = furniture.transform.position;
-                    transform.rotation = furniture.transform.rotation;
-                    if (tentTool != null)
-                        tentTool.SetActive(true);
 
-                    animator.SetBool("IsTent", true);
-                    yield return new WaitForSeconds((animator.GetCurrentAnimatorClipInfo(0).Length + 0.5f));
-                    break;
-                default:
-                    yield return randomAnimSec;
-                    break;
-            }
+            rb.isKinematic = true;
+
+            // Reset all animations to false if there is a change
+            bool animationChanged = false;
+
+            if (prevFurnitureTag == furnitureTag)
+                Debug.Log("같은 애니메이션이 싫행되었습니다.    : " + characterName);
+
+                // Only reset previous animations if the furniture tag changes
+                if (prevFurnitureTag != null)
+                {
+                    animator.SetBool("IsSit", false);
+                    animator.SetBool("IsLie", false);
+                    animator.SetBool("IsTent", false);
+                }
+                yield return MoveTo(furniture.gameObject);
+
+                // Set the new animation
+                switch (furnitureTag)
+                {
+                    case "Sit":
+                        transform.position = furniture.transform.position;
+                        transform.rotation = furniture.transform.rotation;
+                        animator.SetBool("IsSit", true);
+                        animationChanged = true;
+                        yield return randomAnimSec;
+                        break;
+                    case "Lie":
+                        transform.position = furniture.transform.position;
+                        transform.rotation = furniture.transform.rotation;
+                        animator.SetBool("IsLie", true);
+                        animationChanged = true;
+                        yield return randomAnimSec;
+                        break;
+                    case "Tent":
+                        transform.position = furniture.transform.position;
+                        transform.rotation = furniture.transform.rotation;
+                        if (tentTool != null)
+                            tentTool.SetActive(true);
+                        animator.SetBool("IsTent", true);
+                        animationChanged = true;
+
+                        AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+                        if(clipInfo.Length > 0)
+                        {
+                            animationCliplength = clipInfo[0].clip.length;
+                        }
+                        yield return new WaitForSeconds(animationCliplength + 0.5f);
+                        break;
+                    default:
+                        yield return randomAnimSec;
+                        break;
+                }
+
+                // Update the previous furniture tag
+                prevFurnitureTag = furnitureTag;
+
             rb.isKinematic = false;
             if (tentTool != null)
                 tentTool.SetActive(false);
-
-            animator.SetBool("IsSit", false);
-            animator.SetBool("IsLie", false);
-            animator.SetBool("IsTent", false);
         }
+
+
+        animator.SetBool("IsSit", false);
+        animator.SetBool("IsLie", false);
+        animator.SetBool("IsTent", false);
         isRandomAction = false;
     }
+
 
     public void ActiveRandomDialogue(bool active)
     {

@@ -120,8 +120,8 @@ public class GameManager : MonoBehaviour
     public IEnumerator SpawnNPC(GameObject npc, Vector3 spawnPoint, int npcIndex)
     {
         GameObject character = Instantiate(npc, spawnPoint, entrance.transform.rotation * Quaternion.Euler(0, -90, 0));
-        CharacterController controller = character.GetComponent<CharacterController>();
-        NegativeCharacterController negativeController = character.GetComponent<NegativeCharacterController>();
+        NPCController controller = character.GetComponent<NPCController>();
+        NegativeNPCController negativeController = character.GetComponent<NegativeNPCController>();
 
         Debug.Log(npc.name == "Influencer" && isMetInfluencer == false);
 

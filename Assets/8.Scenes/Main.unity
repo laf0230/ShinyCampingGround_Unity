@@ -2443,9 +2443,9 @@ GameObject:
   m_Component:
   - component: {fileID: 360064045}
   m_Layer: 0
-  m_Name: Waypoint_2PetOwner_2
+  m_Name: Waypoint_PetOwner_2_2
   m_TagString: Untagged
-  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -4129,9 +4129,9 @@ GameObject:
   m_Component:
   - component: {fileID: 615180265}
   m_Layer: 0
-  m_Name: Waypoint_Influencer_1
+  m_Name: Waypoint_Influencer_1_1
   m_TagString: Untagged
-  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -5786,7 +5786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8702772291099400465, guid: 8d9a9555b0978a34094c6ff251ee6d16, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.097751215
+      value: 0.09775122
       objectReference: {fileID: 0}
     - target: {fileID: 8702772291099400465, guid: 8d9a9555b0978a34094c6ff251ee6d16, type: 3}
       propertyPath: m_LocalRotation.y
@@ -5794,7 +5794,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8702772291099400465, guid: 8d9a9555b0978a34094c6ff251ee6d16, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.10727673
+      value: -0.10727672
       objectReference: {fileID: 0}
     - target: {fileID: 9062272709970773918, guid: 8d9a9555b0978a34094c6ff251ee6d16, type: 3}
       propertyPath: m_XAxis.Value
@@ -6906,9 +6906,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1049692052}
   m_Layer: 0
-  m_Name: Waypoint_2Influencer_2_SitePosition
+  m_Name: Waypoint_Influencer_2_2_SitePosition
   m_TagString: Untagged
-  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -8957,9 +8957,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1351344307}
   m_Layer: 0
-  m_Name: Waypoint_Influencer_2_SitePosition
+  m_Name: Waypoint_Influencer_1_2_SitePosition
   m_TagString: Untagged
-  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -9655,9 +9655,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1429008470}
   m_Layer: 0
-  m_Name: Waypoint_2Influencer_1
+  m_Name: Waypoint_Influencer_2_1
   m_TagString: Untagged
-  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -10107,9 +10107,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1482514004}
   m_Layer: 0
-  m_Name: Waypoint_PetOwner_1_SitePosition
+  m_Name: Waypoint_PetOwner_1_1_SitePosition
   m_TagString: Untagged
-  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -10243,9 +10243,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1534219687}
   m_Layer: 0
-  m_Name: Waypoint_PetOwner_2
+  m_Name: Waypoint_PetOwner_1_2
   m_TagString: Untagged
-  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -13272,9 +13272,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1901059952}
   m_Layer: 0
-  m_Name: Waypoint_2PetOwner_1_SitePosition
+  m_Name: Waypoint_PetOwner_2_1_SitePosition
   m_TagString: Untagged
-  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

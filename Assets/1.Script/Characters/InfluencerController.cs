@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InfluencerController : CharacterController
+public class InfluencerController : NPCController
 {
     public override IEnumerator ActionSequence()
     {

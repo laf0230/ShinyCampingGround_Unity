@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
         {
             if(hit.collider.CompareTag("NPC"))
             {
-                hit.collider.GetComponent<NegativeCharacterController>().Catehed();
+                hit.collider.GetComponent<NegativeNPCController>().Catehed();
             }
 
             if(hit.collider.CompareTag("Trash"))

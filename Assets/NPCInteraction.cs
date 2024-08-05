@@ -10,9 +10,9 @@ public class NPCInteraction : MonoBehaviour
     {
         if (other.CompareTag("NPC") || other.CompareTag("Trash"))
         {
-            if (other.CompareTag("NPC") && other.GetComponent<CharacterController>().isRandomAction)
+            if (other.CompareTag("NPC") && other.GetComponent<NPCController>().isRandomAction)
             {
-                other.GetComponent<CharacterController>().ActiveRandomDialogue(true);
+                other.GetComponent<NPCController>().ActiveRandomDialogue(true);
             }
         }
     }
@@ -21,9 +21,9 @@ public class NPCInteraction : MonoBehaviour
     {
         if (other.CompareTag("Trash"))
             isInterectionObj = true;
-        else if (other.CompareTag("NPC") && other.GetComponent<NegativeCharacterController>())
-            isInterectionObj = !other.GetComponent<NegativeCharacterController>().isKnockdown;
-        else if (other.CompareTag("NPC") && other.GetComponent<CharacterController>())
+        else if (other.CompareTag("NPC") && other.GetComponent<NegativeNPCController>())
+            isInterectionObj = !other.GetComponent<NegativeNPCController>().isKnockdown;
+        else if (other.CompareTag("NPC") && other.GetComponent<NPCController>())
         {
             isInterectionObj = true;
         }
@@ -34,7 +34,7 @@ public class NPCInteraction : MonoBehaviour
         if(other.CompareTag("NPC") || other.CompareTag("Trash"))
         {
             if(other.CompareTag("NPC"))
-                other.GetComponent<CharacterController>().ActiveRandomDialogue(false);
+                other.GetComponent<NPCController>().ActiveRandomDialogue(false);
         }
     }
 

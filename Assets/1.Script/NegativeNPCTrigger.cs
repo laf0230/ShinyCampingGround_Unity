@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NegativeCharacterTrigger : MonoBehaviour
+public class NegativeNPCTrigger : MonoBehaviour
 {
     public bool isInPlayer = false;
     

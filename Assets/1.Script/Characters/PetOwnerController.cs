@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PetOwnerController : CharacterController
+public class PetOwnerController : NPCController
 {
     public override IEnumerator ActionSequence()
     {

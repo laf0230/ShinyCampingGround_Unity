@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class NegativeCharacterController : CharacterController
+public class NegativeNPCController : NPCController
 {
     public float knockdownTime = 2.05f;
     public WaitForSeconds knockdownDelay;
@@ -76,8 +76,8 @@ public class NegativeCharacterController : CharacterController
 
         foreach (GameObject npc in npcs)
         {
-            CharacterController characterController = npc.GetComponent<CharacterController>();
-            if (characterController != null && characterController.gameObject.GetComponent<NegativeCharacterController>() == null)
+            NPCController characterController = npc.GetComponent<NPCController>();
+            if (characterController != null && characterController.gameObject.GetComponent<NegativeNPCController>() == null)
             {
                 SpeechBubbleController speechBubbleController = characterController.SpeechBubbleController;
                 if (speechBubbleController != null)
