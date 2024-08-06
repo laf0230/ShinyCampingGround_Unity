@@ -2,9 +2,14 @@ using UnityEngine;
 using Cinemachine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(GroundChecker))]
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    public float gravity = 9.81f;
+    public float slideSpeed = 3f;
+
     private Vector2 moveInput;
     private Camera freeLookCamera;
     public List<GameObject> characters;
@@ -14,18 +19,27 @@ public class PlayerController : MonoBehaviour
     public NPCInteraction nPCInteraction;
     public int currentCharacterIndex = 0;
 
+    private CharacterController characterController;
     private Transform characterTransform;
-    private Rigidbody rb;
     private Animator animator;
+    private GroundChecker groundCheck;
+    private Vector3 velocity;
     private bool isMoving;
+    private bool isSliding;
+
+    private void Awake()
+    {
+        characterController = GetComponent<CharacterController>();
+        groundCheck = GetComponent<GroundChecker>();
+        isSliding = false;
+        velocity = Vector3.zero;
+    }
 
     private void Start()
     {
         characterTransform = transform; // 캐릭터 오브젝트의 Transform을 저장
         animator = playerObject.GetComponent<Animator>(); // Animator 컴포넌트 가져오기
-        
-        rb = GetComponent<Rigidbody>();
-        freeLookCamera = Camera.main;
+        freeLookCamera = Camera.main; // 메인 카메라 참조
     }
 
     private void Update()
@@ -34,7 +48,6 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && nPCInteraction.isInterectionObj)
         {
-            Debug.Log("a");
             ClassifyObject(Input.mousePosition);
         }
 
@@ -78,8 +91,44 @@ public class PlayerController : MonoBehaviour
             characterTransform.rotation = targetRotation;
 
             // 캐릭터의 이동 처리
-            rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
+            characterController.Move(moveDirection * moveSpeed * Time.fixedDeltaTime);
         }
+
+        // 중력 처리
+        if (!groundCheck.IsGrounded())
+        {
+            velocity.y -= gravity * Time.fixedDeltaTime; // 중력 가속도 적용
+        }
+        else
+        {
+            if (velocity.y < 0)
+            {
+                velocity.y = 0f; // 바닥에 닿으면 속도를 0으로
+            }
+        }
+
+        characterController.Move(velocity * Time.fixedDeltaTime); // 중력에 의한 이동 적용
+
+        SlidingCharacter();
+    }
+
+    public void SlidingCharacter()
+    {
+        if (!characterController.isGrounded) return;
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, characterController.height / 2))
+        {
+            // 경사면의 기울기가 slopeLimit 보다 클경우 미끄러짐 처리
+            if (Vector3.Angle(hit.normal, Vector3.up) > characterController.slopeLimit)
+            {
+                Vector3 slideDirection = Vector3.ProjectOnPlane(Physics.gravity, hit.normal).normalized;
+                characterController.Move(slideDirection * Time.deltaTime * slideSpeed);
+                isSliding = true;
+                return;
+            }
+        }
+        isSliding = false;
     }
 
     public void ClassifyObject(Vector3 vectorToRay)
@@ -89,12 +138,12 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(pointPosition, out RaycastHit hit, 1000f, 1 << LayerMask.NameToLayer("Interection")))
         {
-            if(hit.collider.CompareTag("NPC"))
+            if (hit.collider.CompareTag("NPC"))
             {
                 hit.collider.GetComponent<NegativeNPCController>().Catehed();
             }
 
-            if(hit.collider.CompareTag("Trash"))
+            if (hit.collider.CompareTag("Trash"))
             {
                 hit.collider.GetComponent<TrashController>().Clean();
             }
@@ -128,14 +177,12 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeCharacterModel(GameObject model)
     {
-        var current_Model = playerObject; 
         playerObject.SetActive(false);
         playerObject = model;
         playerObject.SetActive(true);
+
         // Animation Change
         animator = model.GetComponent<Animator>();
-
-        
     }
 }
 
