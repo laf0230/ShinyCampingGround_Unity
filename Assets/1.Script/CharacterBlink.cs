@@ -22,10 +22,15 @@ public class Face
 
 public class CharacterBlink : MonoBehaviour
 {
+    [Header("Debug")]
+    [SerializeField] bool EnableDebugMode = false;
+
+
+    [Header("Material")]
     public Material eye;
     public Material mouth;
 
-    [Header("메터리얼")]
+    [Header("Textures")]
     public List<Face> faces = new List<Face>();
     private Face defaultFace;
     private Face blinkFace;
@@ -65,6 +70,11 @@ public class CharacterBlink : MonoBehaviour
 
     private void OnEnable()
     {
+        if (EnableDebugMode)
+        {
+            DebugingTexture();
+        }
+        
         ActiveBlink(false);
         ActiveTalk(false);
 
@@ -209,6 +219,13 @@ public class CharacterBlink : MonoBehaviour
                 Debug.LogWarning($"Unexpected faceName: {faceName}");
                 break;
         }
+    }
+
+    private void DebugingTexture()
+    {
+        StartCoroutine(BlinkAnimation());
+
+        StartCoroutine(TalkAnimation());
     }
 }
 
