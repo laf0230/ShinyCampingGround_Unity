@@ -18,6 +18,13 @@ public class CameraController : MonoBehaviour
     public Joystick joystick; // Joystick 스크립트
     public bool isInvertY = false;
 
+    private InputManager inputs;
+
+    private void Awake()
+    {
+        inputs = GetComponentInParent<InputManager>();
+    }
+
     private void Start()
     {
         // 초기 카메라 거리 설정
@@ -26,11 +33,12 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+
         // Joystick 입력 값을 Cinemachine FreeLook 카메라의 X 및 Y 축 입력 값으로 설정
-        freeLookCamera.m_XAxis.Value += joystick.Horizontal * Time.deltaTime * 100f; // X 축 회전 속도 조절
+        freeLookCamera.m_XAxis.Value += inputs.rotation.x * Time.deltaTime * 100f; // X 축 회전 속도 조절
         if (isInvertY)
         {
-            freeLookCamera.m_YAxis.Value -= joystick.Vertical * Time.deltaTime;
+            freeLookCamera.m_YAxis.Value -= inputs.rotation.y * Time.deltaTime;
         }
         else
         {

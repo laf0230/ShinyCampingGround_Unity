@@ -258,6 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec69636acf921b8419de98c894fd55a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnableDebugMode: 0
   eye: {fileID: 2100000, guid: d90865b6f4c502f43bae25c48406950e, type: 2}
   mouth: {fileID: 2100000, guid: 54fb5b934decc8e4d9f629b8296f0840, type: 2}
   faces:

@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     public List<GameObject> characters;
     public GameObject playerObject;
     public SODialogue dialogues;
-    public Joystick joystick;
     public NPCInteraction nPCInteraction;
     public int currentCharacterIndex = 0;
 
@@ -23,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private Transform characterTransform;
     private Animator animator;
     private GroundChecker groundCheck;
+    private InputManager inputs;
     private Vector3 velocity;
     private bool isMoving;
     private bool isSliding;
@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         groundCheck = GetComponent<GroundChecker>();
+        inputs = GetComponent<InputManager>();
         isSliding = false;
         velocity = Vector3.zero;
     }
@@ -68,11 +69,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // 캐릭터 이동 처리
-        float moveHorizontal = joystick.Horizontal;
-        float moveVertical = joystick.Vertical;
-
-        isMoving = moveHorizontal != 0 || moveVertical != 0;
+        isMoving = inputs.inputvalue.magnitude > 0.001f;
 
         Vector3 cameraForward = freeLookCamera.transform.forward;
         Vector3 cameraRight = freeLookCamera.transform.right;
@@ -82,7 +79,7 @@ public class PlayerController : MonoBehaviour
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        Vector3 moveDirection = cameraForward * moveVertical + cameraRight * moveHorizontal;
+        Vector3 moveDirection = cameraForward * inputs.inputvalue.y + cameraRight * inputs.inputvalue.x;
 
         if (moveDirection.magnitude > 0.1f)
         {
