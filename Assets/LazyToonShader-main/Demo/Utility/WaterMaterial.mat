@@ -96,7 +96,7 @@ Material:
     m_Floats:
     - Vector1_01f5fb6d5ea8433080a87ac9ffe1f31e: 3.26
     - Vector1_1e98e329fd864267af3e1ff49baaf2a4: 20
-    - Vector1_39868674c5524649a16287eb56ebe90e: 0.53
+    - Vector1_39868674c5524649a16287eb56ebe90e: 0.28
     - Vector1_9fad8597dcf34c828162f3d05a0ae23c: 0.9
     - _AlphaClip: 0
     - _AlphaToMask: 0
@@ -113,17 +113,17 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _FoamAmount: 2
+    - _FoamAmount: 4.01
     - _FoamCutoff: 120
-    - _Foam_scale: 92.1
-    - _Foam_speed: 0.5
+    - _Foam_scale: 2.35
+    - _Foam_speed: 0.56
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _MaxWaveSharpnessByNormal: 36.1
     - _Metallic: 0
     - _NormalWaveHeightMultiplication: 30.46
-    - _NormalWaveSpeedMultiplication: 0.8
+    - _NormalWaveSpeedMultiplication: 1.42
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -138,18 +138,18 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _WaterHeight: 27.92
-    - _WaveFoam: 0.6
-    - _WaveFoamCutoff: 1.26
-    - _WaveHeight: 11.5
-    - _WaveNoiseScale: 2.45
+    - _WaveFoam: 10
+    - _WaveFoamCutoff: 0.062
+    - _WaveHeight: 10.8
+    - _WaveNoiseScale: 1.64
     - _WaveNoiseStrength: 13.07
-    - _WaveSharpness: 0
-    - _WaveSpeed: 0.44
+    - _WaveSharpness: 4.09
+    - _WaveSpeed: 1.88
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - Color_8e85f698c5c34ae8909cd7f57e40dc88: {r: 1, g: 1, b: 1, a: 0}
-    - Color_fad54c46489b494b85e60428b698011d: {r: 0.23423992, g: 0.57143676, b: 0.7433963, a: 0.7058824}
+    - Color_fad54c46489b494b85e60428b698011d: {r: 0.13725491, g: 0.7372549, b: 0.73608464, a: 0.7058824}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

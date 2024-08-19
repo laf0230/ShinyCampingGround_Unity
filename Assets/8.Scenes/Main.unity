@@ -2913,7 +2913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8702772291099400465, guid: 8d9a9555b0978a34094c6ff251ee6d16, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.09775122
+      value: 0.097751215
       objectReference: {fileID: 0}
     - target: {fileID: 8702772291099400465, guid: 8d9a9555b0978a34094c6ff251ee6d16, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2921,7 +2921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8702772291099400465, guid: 8d9a9555b0978a34094c6ff251ee6d16, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.10727672
+      value: -0.10727673
       objectReference: {fileID: 0}
     - target: {fileID: 9062272709970773918, guid: 8d9a9555b0978a34094c6ff251ee6d16, type: 3}
       propertyPath: m_XAxis.Value
