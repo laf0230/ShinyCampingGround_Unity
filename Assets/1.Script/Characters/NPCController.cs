@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,6 +34,7 @@ public class NPCController : MonoBehaviour
     public GameObject trash;
 
     [SerializeField] public string characterName;
+    [SerializeField] public int id;
     [SerializeField] public GameObject Character;
     [SerializeField] public GameObject hammer;
     [SerializeField] public GameObject campKit;
@@ -53,15 +55,23 @@ public class NPCController : MonoBehaviour
     [SerializeField] public WaitForSeconds totalRandomAnimSec;
     [SerializeField] public int currentSiturationIndex = 0; // 상황: 대화들의 묶음
     [SerializeField] public int currentDialogueIndex = 0; // 현제 대화 인댁스: 현제 대화의 위치
+    [SerializeField] List<TalkData> talkData;
+    [SerializeField] TalkData currentTalkData;
+    [SerializeField] public int dialogueIndex = 0;
+    [SerializeField] public int currentDialogueID = 0;
 
     CharacterBlink characterFace;
     AudioSource audioSource;
     public bool isRandomAction = false;
     public bool isMetFirst = true;
 
+    private void Awake()
+    {
+        
+    }
+
     protected virtual void Start()
     {
-
         characterFace = GetComponent<CharacterBlink>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
@@ -76,6 +86,15 @@ public class NPCController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = Character.GetComponent<Animator>();
         cam = GetComponentInChildren<CinemachineVirtualCamera>();
+
+        // npc id가 동일한 대사 불러오기
+        talkData = GameManager.Instance.dataManager.talkData
+            .Cast<TalkData>()
+            .Where(item => item.npcID == id)
+            .ToList();
+
+        // npc 대사 중 첫번째 대사 불러오기
+        currentDialogueID = talkData[0].id;
 
         if (characterFace != null)
             characterFace.ActiveBlink(true);
@@ -173,13 +192,17 @@ public class NPCController : MonoBehaviour
         var _speechType = speechType;
 
         Debug.Log(gameObject.name + " : state Enter: Talk");
-        // situration setting
+        // Before code
         SODialogue currentSituration = dialogues[currentSiturationIndex];
 
+        // Afeter Code
+        // next id가 0인 경우 대화 끝
+        
+       
         Debug.Log(currentSituration.dialogues.Count);
-        Debug.Log(currentDialogueIndex);
-
-        while (currentDialogueIndex < currentSituration.dialogues.Count)
+        
+        // 다음 텍스트가 없을 경우 종료
+        while (true)
         {
             if (characterFace != null)
                 characterFace.ActiveTalk(true);
@@ -188,13 +211,25 @@ public class NPCController : MonoBehaviour
             {
                 case SpeechType.global:
                     cam.Priority = 11;
-                    GameManager.Instance.uIManager.dialogueManager.ActiveDialogue(characterName, currentSituration.dialogues[currentDialogueIndex]);
 
-                    Debug.Log(currentSituration.dialogues[currentDialogueIndex]);
-                    // 텍스트가 자동으로 흘러가게 설정할 때 코드
+                   currentTalkData = talkData.FirstOrDefault(x => x.id == currentDialogueID);
+                   if(currentTalkData == null)
+                   {
+                       Debug.Log($"TalkData with ID {currentDialogueID}is not found");
+                   }
+            
+                   Debug.Log(currentTalkData);
+ 
 
-                    // 텍스트가 완성되지 않았을 때 오토 해제 시 자동 넘어가기 취소
+                    var name = currentTalkData.npcName;
+                    var text = GameManager.Instance.dataManager.GetScriptData(currentTalkData.stringID).text;
 
+                    if(name == null)
+                    {
+                        Debug.Log(currentTalkData.npcName + "Character name is null");
+                    }
+
+                    GameManager.Instance.uIManager.dialogueManager.ActiveDialogue(name, text);
                     // 텍스트가 완성되지 않았을 때 오토 해제 시 자동 넘어가기 취소
                     if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
                     {
@@ -246,14 +281,25 @@ public class NPCController : MonoBehaviour
 
             if (speechType == SpeechType.global)
                 GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
+
+            Debug.Log("Dialogue end");
+            if(currentTalkData.nextScriptID == 0)
+            {
+                // 다음 대사가 없으면 다음 id로 넘어가는 코드
+                currentDialogueID++;
+                break;
+            }
+
+            // 다음 대사를 현재 대사에 대입하는 코드
+            currentDialogueID = currentTalkData.nextScriptID; 
         }
 
         if (speechType == SpeechType.global)
             GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
-
+        
         cam.Priority = 9; // 카메라 순서 변경
         currentSiturationIndex++; // 다음 대사집으로 변경
-        currentDialogueIndex = 0; // 대사 순서 초기화
+        currentDialogueIndex = 0; // 대사 순서
     }
 
     protected virtual IEnumerator RandomAction()

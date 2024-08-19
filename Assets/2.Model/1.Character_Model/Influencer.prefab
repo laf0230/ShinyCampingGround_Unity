@@ -129,6 +129,7 @@ MonoBehaviour:
   tentTool: {fileID: 3660894035406136091}
   trash: {fileID: 5767487182424121770, guid: 36fa3aba35a4ec54a93ae7b0a03536a5, type: 3}
   characterName: "\uC778\uD50C\uB8E8\uC5B8\uC11C"
+  id: 10001
   Character: {fileID: 9034945102356189236}
   hammer: {fileID: 2840826485824341680}
   campKit: {fileID: 6550587585374199644, guid: 3e006f313ca723e4aa20b1f16aea6805, type: 3}
@@ -148,6 +149,7 @@ MonoBehaviour:
   totalRandomAnimDuration: 50
   currentSiturationIndex: 0
   currentDialogueIndex: 0
+  talkData: []
   isRandomAction: 0
   isMetFirst: 1
 --- !u!82 &1773847319689514487

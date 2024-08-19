@@ -57,6 +57,7 @@ MonoBehaviour:
   tentTool: {fileID: 0}
   trash: {fileID: 5767487182424121770, guid: 9d70cec6982b574479988a71705a75f1, type: 3}
   characterName: "\uBC18\uB824\uC778"
+  id: 10002
   Character: {fileID: 1926647525650489734}
   hammer: {fileID: 8122622944757105769}
   campKit: {fileID: 6550587585374199644, guid: 3b4accc6d3f13bc40bab7b65a59f2559, type: 3}
@@ -75,6 +76,26 @@ MonoBehaviour:
   totalRandomAnimDuration: 50
   currentSiturationIndex: 0
   currentDialogueIndex: 0
+  talkData: []
+  currentTalkData:
+    id: 0
+    npcID: 0
+    npcName: 
+    patternID: 0
+    cameraDirectType: 0
+    scriptType: 0
+    scriptImageID: 0
+    scriptImageColorID: 0
+    stringID: 0
+    imageID: 0
+    visualEffectID: 0
+    soundEffectID: 0
+    animID: 0
+    skipType: 0
+    skillID: 0
+    nextScriptID: 0
+  dialogueIndex: 0
+  currentDialogueID: 0
   isRandomAction: 0
   isMetFirst: 1
 --- !u!54 &3023031603435474057
@@ -257,6 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec69636acf921b8419de98c894fd55a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnableDebugMode: 0
   eye: {fileID: 2100000, guid: f08adef73d9b87f4a995abf839db0223, type: 2}
   mouth: {fileID: 2100000, guid: 3a6c7581a28e7454b947c634e6ad9a0e, type: 2}
   faces:

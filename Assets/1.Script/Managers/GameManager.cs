@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public UIManager uIManager;
     public WayPointManager wayPointManager;
+    public DataManager dataManager;
     public EnteranceController entrance;
     public GameObject negativeEntrance;
     public GameObject ManagementOffice;
@@ -52,6 +53,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        dataManager = GetComponentInChildren<DataManager>();
     }
 
     private void Start()

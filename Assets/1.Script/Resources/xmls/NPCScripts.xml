@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DialogueGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Dialogue>
+		<id>100001</id>
+		<npcid>10001</npcid>
+		<Descript>여기가 새로 오픈한 따끈따끈한 명랑캠핑장인가?</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100002</id>
+		<npcid>10001</npcid>
+		<Descript>캠장님 반가워요 ~~
+소문 듣고 왔는데 너무너무 좋네요
+멋진 콘텐츠 만들 수 있겠어요~</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100003</id>
+		<npcid>10001</npcid>
+		<Descript>여기가 정말 뷰 맛집이네~
+어디에 텐트를 치는게 좋을까?
+음~ 저기가 좋겠어!</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100004</id>
+		<npcid>10001</npcid>
+		<Descript>영차~
+휴 겨우 설치 다 끝냈네 그럼 라이브 방송 시작해 볼까?</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100005</id>
+		<npcid>10001</npcid>
+		<Descript>너무 즐거웠어요~ 
+여긴 앞으로 최애 캠핑장 찜! 또 올게요
+자주 봐요!</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100006</id>
+		<npcid>10002</npcid>
+		<Descript>소문듣고 놀러 왔어요!
+생각보다 더 멋진 캠핑장인걸!</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100007</id>
+		<npcid>10002</npcid>
+		<Descript>이렇게 멋진 캠핑장을 이제야 알게 되어서 아쉬워요!</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100008</id>
+		<npcid>10002</npcid>
+		<Descript>여기가 넓고 좋아요!
+여기로 할게요!</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100009</id>
+		<npcid>10002</npcid>
+		<Descript>정말 멋진 캠핑장이에요!
+다음에는 망고랑 올게요!</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100010</id>
+		<npcid>10003</npcid>
+		<Descript>크크크! 캠핑장 좀 털어볼까?</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100011</id>
+		<npcid>10003</npcid>
+		<Descript>좋은 물건들이 많은걸~</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100012</id>
+		<npcid>10003</npcid>
+		<Descript>오늘은 대박일세~</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100013</id>
+		<npcid>10003</npcid>
+		<Descript>여기가 꿀단지로구나~</Descript>
+	</Dialogue>
+	<Dialogue>
+		<id>100014</id>
+		<npcid>10003</npcid>
+		<Descript>잘 털고 갑니다~ 또 봐요~</Descript>
+	</Dialogue>
+</DialogueGroup>
