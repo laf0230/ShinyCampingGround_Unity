@@ -2,28 +2,13 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum SpeechType
-{
-    global,
-    personal
-}
-
 public class NPCController : MonoBehaviour
 {
-    public enum States
-    {
-        Idle,
-        Move,
-        Talk,
-        Build,
-        Pack,
-        Exit
-    }
-
-    public List<States> states = new List<States>();
+    public StateMachine stateMachine = new StateMachine();
 
     protected Rigidbody rb;
     protected NavMeshAgent navMeshAgent;
@@ -53,21 +38,27 @@ public class NPCController : MonoBehaviour
 
     [SerializeField] public WaitForSeconds randomAnimSec;
     [SerializeField] public WaitForSeconds totalRandomAnimSec;
-    [SerializeField] public int currentSiturationIndex = 0; // 상황: 대화들의 묶음
-    [SerializeField] public int currentDialogueIndex = 0; // 현제 대화 인댁스: 현제 대화의 위치
-    [SerializeField] List<TalkData> talkData;
+    [SerializeField] public List<TalkData> talkData { get; set; }
     [SerializeField] TalkData currentTalkData;
-    [SerializeField] public int dialogueIndex = 0;
-    [SerializeField] public int currentDialogueID = 0;
+    [SerializeField] public int currentTalkID = 0;
 
-    CharacterBlink characterFace;
-    AudioSource audioSource;
+    public CharacterBlink characterFace { get; set; }
+    private AudioSource audioSource;
+    private List<TalkController> talks = new List<TalkController>();
+    private GeneralTalk generalTalk;
+    private SpecialTalk specialTalk;
+
     public bool isRandomAction = false;
     public bool isMetFirst = true;
+    public bool isDestination;
 
     private void Awake()
     {
-        
+        generalTalk = new GeneralTalk(this);
+        specialTalk = new SpecialTalk(this);
+
+        talks.Add(specialTalk);
+        talks.Add(generalTalk);
     }
 
     protected virtual void Start()
@@ -82,7 +73,6 @@ public class NPCController : MonoBehaviour
 
     public void OnEnable()
     {
-        isMetFirst = true;
         rb = GetComponent<Rigidbody>();
         animator = Character.GetComponent<Animator>();
         cam = GetComponentInChildren<CinemachineVirtualCamera>();
@@ -94,7 +84,7 @@ public class NPCController : MonoBehaviour
             .ToList();
 
         // npc 대사 중 첫번째 대사 불러오기
-        currentDialogueID = talkData[0].id;
+        currentTalkID = talkData[0].id;
 
         if (characterFace != null)
             characterFace.ActiveBlink(true);
@@ -102,6 +92,7 @@ public class NPCController : MonoBehaviour
 
     private void Update()
     {
+
         if (GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() && GameManager.Instance.uIManager.dialogueManager.IsTyping())
         {
             GameManager.Instance.uIManager.dialogueManager.SetCompleteDialogue();
@@ -187,91 +178,41 @@ public class NPCController : MonoBehaviour
         audioSource.Stop();
     }
 
-    protected IEnumerator Talk(SpeechType speechType)
+    protected IEnumerator Talk()
     {
-        var _speechType = speechType;
-
+        TalkController talk;
         Debug.Log(gameObject.name + " : state Enter: Talk");
-        // Before code
-        SODialogue currentSituration = dialogues[currentSiturationIndex];
 
-        // Afeter Code
-        // next id가 0인 경우 대화 끝
-        
-       
-        Debug.Log(currentSituration.dialogues.Count);
-        
         // 다음 텍스트가 없을 경우 종료
         while (true)
         {
             if (characterFace != null)
                 characterFace.ActiveTalk(true);
 
-            switch (_speechType)
+            currentTalkData = talkData.FirstOrDefault((x) => x.id == currentTalkID);
+
+            // talk의 타입 정하기
+            talk = talks[currentTalkData.scriptType];
+            talk.SetTalkData(currentTalkData);
+
+            // 첫 만남이 아닐 때
+            if (!isMetFirst)
             {
-                case SpeechType.global:
-                    cam.Priority = 11;
-
-                   currentTalkData = talkData.FirstOrDefault(x => x.id == currentDialogueID);
-                   if(currentTalkData == null)
-                   {
-                       Debug.Log($"TalkData with ID {currentDialogueID}is not found");
-                   }
-            
-                   Debug.Log(currentTalkData);
- 
-
-                    var name = currentTalkData.npcName;
-                    var text = GameManager.Instance.dataManager.GetScriptData(currentTalkData.stringID).text;
-
-                    if(name == null)
-                    {
-                        Debug.Log(currentTalkData.npcName + "Character name is null");
-                    }
-
-                    GameManager.Instance.uIManager.dialogueManager.ActiveDialogue(name, text);
-                    // 텍스트가 완성되지 않았을 때 오토 해제 시 자동 넘어가기 취소
-                    if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
-                    {
-                        // 터치 혹은 스킵
-                        yield return null;
-                        yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
-                    }
-                    else
-                    {
-                        // 오토 모드
-                        yield return new WaitUntil(() => !GameManager.Instance.uIManager.dialogueManager.IsTyping());
-
-                        // 오토 모드가 해제되었는지 확인
-                        if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
-                        {
-                            // 오토 모드가 해제되었을 때, 사용자가 다음 대사나 스킵을 요청할 때까지 대기
-                            yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
-                        }
-                        else
-                        {
-                            // 오토 모드가 유지되는 경우, 일정 시간 대기 후 다음 대사로 이동
-                            yield return new WaitForSeconds(1.5f);
-                        }
-                    }
-                    break;
-                // case break
-
-                case SpeechType.personal:
-                    if (characterFace != null)
-                        characterFace.ActiveTalk(true);
-
-                    SpeechBubbleController.SetName(characterName);
-                    SpeechBubbleController.SetText(currentSituration.dialogues[currentDialogueIndex]);
-                    SpeechBubbleController.FlickBubble();
-                    break; // case break
+                talk = talks[1];
             }
+            else
+            {
+                talk = talks[currentTalkData.scriptType];
+            }
+
+            if (talk.Name != null && talk.Text != null)
+            {
+                yield return StartCoroutine(talk.Talk());
+            }
+
 
             if (characterFace != null)
                 characterFace.ActiveTalk(false);
-
-            currentDialogueIndex++; // 다음 대사로 변경
-
 
             if (GameManager.Instance.uIManager.dialogueManager.IsSkipRequested())
             {
@@ -279,27 +220,23 @@ public class NPCController : MonoBehaviour
                 break; // while break
             }
 
-            if (speechType == SpeechType.global)
+            if (talk == talks[0])
                 GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
 
             Debug.Log("Dialogue end");
-            if(currentTalkData.nextScriptID == 0)
+            if (currentTalkData.nextScriptID == 0)
             {
                 // 다음 대사가 없으면 다음 id로 넘어가는 코드
-                currentDialogueID++;
+                currentTalkID++;
                 break;
             }
 
             // 다음 대사를 현재 대사에 대입하는 코드
-            currentDialogueID = currentTalkData.nextScriptID; 
+            currentTalkID = currentTalkData.nextScriptID;
         }
 
-        if (speechType == SpeechType.global)
-            GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
-        
+
         cam.Priority = 9; // 카메라 순서 변경
-        currentSiturationIndex++; // 다음 대사집으로 변경
-        currentDialogueIndex = 0; // 대사 순서
     }
 
     protected virtual IEnumerator RandomAction()
@@ -309,7 +246,6 @@ public class NPCController : MonoBehaviour
 
         float startTime = Time.time;
         string prevFurnitureTag = null;
-
         float animationCliplength = 0f;
 
         while (Time.time - startTime < totalRandomAnimDuration)
@@ -327,54 +263,54 @@ public class NPCController : MonoBehaviour
             if (prevFurnitureTag == furnitureTag)
                 Debug.Log("같은 애니메이션이 싫행되었습니다.    : " + characterName);
 
-                // Only reset previous animations if the furniture tag changes
-                if (prevFurnitureTag != null)
-                {
-                    animator.SetBool("IsSit", false);
-                    animator.SetBool("IsLie", false);
-                    animator.SetBool("IsTent", false);
-                }
-                yield return MoveTo(furniture.gameObject);
+            // Only reset previous animations if the furniture tag changes
+            if (prevFurnitureTag != null)
+            {
+                animator.SetBool("IsSit", false);
+                animator.SetBool("IsLie", false);
+                animator.SetBool("IsTent", false);
+            }
+            yield return MoveTo(furniture.gameObject);
 
-                // Set the new animation
-                switch (furnitureTag)
-                {
-                    case "Sit":
-                        transform.position = furniture.transform.position;
-                        transform.rotation = furniture.transform.rotation;
-                        animator.SetBool("IsSit", true);
-                        animationChanged = true;
-                        yield return randomAnimSec;
-                        break;
-                    case "Lie":
-                        transform.position = furniture.transform.position;
-                        transform.rotation = furniture.transform.rotation;
-                        animator.SetBool("IsLie", true);
-                        animationChanged = true;
-                        yield return randomAnimSec;
-                        break;
-                    case "Tent":
-                        transform.position = furniture.transform.position;
-                        transform.rotation = furniture.transform.rotation;
-                        if (tentTool != null)
-                            tentTool.SetActive(true);
-                        animator.SetBool("IsTent", true);
-                        animationChanged = true;
+            // Set the new animation
+            switch (furnitureTag)
+            {
+                case "Sit":
+                    transform.position = furniture.transform.position;
+                    transform.rotation = furniture.transform.rotation;
+                    animator.SetBool("IsSit", true);
+                    animationChanged = true;
+                    yield return randomAnimSec;
+                    break;
+                case "Lie":
+                    transform.position = furniture.transform.position;
+                    transform.rotation = furniture.transform.rotation;
+                    animator.SetBool("IsLie", true);
+                    animationChanged = true;
+                    yield return randomAnimSec;
+                    break;
+                case "Tent":
+                    transform.position = furniture.transform.position;
+                    transform.rotation = furniture.transform.rotation;
+                    if (tentTool != null)
+                        tentTool.SetActive(true);
+                    animator.SetBool("IsTent", true);
+                    animationChanged = true;
 
-                        AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
-                        if(clipInfo.Length > 0)
-                        {
-                            animationCliplength = clipInfo[0].clip.length;
-                        }
-                        yield return new WaitForSeconds(animationCliplength + 0.5f);
-                        break;
-                    default:
-                        yield return randomAnimSec;
-                        break;
-                }
+                    AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+                    if (clipInfo.Length > 0)
+                    {
+                        animationCliplength = clipInfo[0].clip.length;
+                    }
+                    yield return new WaitForSeconds(animationCliplength + 0.5f);
+                    break;
+                default:
+                    yield return randomAnimSec;
+                    break;
+            }
 
-                // Update the previous furniture tag
-                prevFurnitureTag = furnitureTag;
+            // Update the previous furniture tag
+            prevFurnitureTag = furnitureTag;
 
             rb.isKinematic = false;
             if (tentTool != null)
@@ -425,4 +361,3 @@ public class NPCController : MonoBehaviour
         this.isMetFirst = isFirstMet;
     }
 }
-

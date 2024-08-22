@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public GameObject ManagementOffice;
     public NavMeshSurface navmesh;
     public List<GameObject> npcs;
+    [Header("Scenes")]
+    public List<string> sceneNameList;
 
     public bool isMetInfluencer = false;
     public bool isMetPetOwner = false;
@@ -122,7 +124,9 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator SpawnNPC(GameObject npc, Vector3 spawnPoint, int npcIndex)
     {
+        // 캐릭터 소환
         GameObject character = Instantiate(npc, spawnPoint, entrance.transform.rotation * Quaternion.Euler(0, -90, 0));
+        // 캐릭터의 컨트롤러 반환
         NPCController controller = character.GetComponent<NPCController>();
         NegativeNPCController negativeController = character.GetComponent<NegativeNPCController>();
 
@@ -130,12 +134,18 @@ public class GameManager : MonoBehaviour
 
         if (controller != null && negativeController == null)
         {
+            // 긍정적인 캐릭터 처리
             if ((npc.name == "Influencer" && isMetInfluencer == false) || (npc.name == "PetOwner" && isMetPetOwner == false))
             {
-                // 처음 등장한 손님
                 SoundManager.Instance.PlaySFXMusic("PositiveEnter");
+
+                // UI
                 uIManager.Alert("새로운 손님이 왔어요!", alertType.main);
+
+                // 코인 획득 코드
                 uIManager.AddCoin(100);
+
+                // 최초로 캐릭터가 등장할 때
                 if (character.name == "Influencer")
                 {
                     isMetInfluencer = true;
@@ -147,7 +157,8 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                // 중복 등장 캐릭터
+                // 최초로 등장한 캐릭터가 아닌 경우 알람만 띄움
+                controller.isMetFirst = false;
                 SoundManager.Instance.PlaySFXMusic("PositiveEnter");
                 uIManager.Alert("손님이 왔어요!", alertType.sub);
                 uIManager.AddCoin(100);
@@ -155,7 +166,7 @@ public class GameManager : MonoBehaviour
         }
         else if (negativeController != null)
         {
-            // 도둑
+            // 부정적인 캐릭터 처리(사운드, 알람)
             SoundManager.Instance.PlaySFXMusic("NegativeEnter");
             uIManager.ToggleAlert(alertType.sub, "도둑이 물건을 훔치고 있어요!<br>도둑을 찾아 제압하세요!", true);
 
@@ -174,5 +185,14 @@ public class GameManager : MonoBehaviour
             Debug.Log(negativeController.gameObject.name);
         }
     }
+
+    #region Scene Control
+
+    public void SwitchScene(string SceneName)
+    {
+        SceneManager.LoadScene(SceneName);
+    }
+
+    #endregion
 }
 

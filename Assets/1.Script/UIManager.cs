@@ -79,7 +79,7 @@ public class UIManager : MonoBehaviour
         graphySwitchBtrn.onClick.AddListener(SwitchDebugMode);
     }
 
-    #region UI
+    #region UI Controller
     public void ChangeUI(string name)
     {
         if(name == "Title")
@@ -195,5 +195,9 @@ public class UIManager : MonoBehaviour
     public void SwitchDebugMode()
     {
         Graphy.SetActive(!Graphy.activeSelf);
+    }
+
+    public void SwitchTestScene()
+    {
     }
 }

@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateMachine : MonoBehaviour
+public class StateMachine
 {
-    private IState currentState;
+    // private IState currentState;
 
     // Update is called once per frame
+    /*
     void Update()
     {
         if (currentState != null)
@@ -29,12 +30,7 @@ public class StateMachine : MonoBehaviour
             currentState.Enter();
         }
     }
+    */
 }
 
-public interface IState
-{
-    void Enter();
-    void Execute();
-    void Exit();
-}
 

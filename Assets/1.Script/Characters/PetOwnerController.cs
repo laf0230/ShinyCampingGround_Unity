@@ -10,16 +10,16 @@ public class PetOwnerController : NPCController
 
         if (!GameManager.Instance.isMetPetOwner)
         {
-            yield return Talk(SpeechType.global);
+            yield return Talk();
             GameManager.Instance.isMetPetOwner = true;
         }
         else
         {
-            yield return Talk(SpeechType.personal);
+            yield return Talk();
         }
 
          yield return MoveTo(goals[0]);
-        yield return Talk(SpeechType.personal);
+        yield return Talk();
         yield return new WaitForSeconds(2f);
         yield return Build(kit: campKit);
         yield return RandomAction();
@@ -27,7 +27,7 @@ public class PetOwnerController : NPCController
         Instantiate(trash, position:transform.position, Quaternion.identity);
         yield return MoveTo(goals[1]);
         yield return MoveTo(goals[2]);
-        yield return Talk(SpeechType.personal);
+        yield return Talk();
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
     }

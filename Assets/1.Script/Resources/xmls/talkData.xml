@@ -42,7 +42,7 @@
 		<npcName>인플루언서</npcName>
 		<patternId>2</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100003</stringId>
@@ -60,7 +60,7 @@
 		<npcName>인플루언서</npcName>
 		<patternId>3</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100004</stringId>
@@ -78,7 +78,7 @@
 		<npcName>인플루언서</npcName>
 		<patternId>1</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100005</stringId>
@@ -115,6 +115,7 @@
 		<patternId>0</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
 		<scriptType>0</scriptType>
+		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100007</stringId>
 		<imageId>0</imageId>
@@ -131,7 +132,7 @@
 		<npcName>반려인</npcName>
 		<patternId>2</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100008</stringId>
@@ -149,7 +150,7 @@
 		<npcName>반려인</npcName>
 		<patternId>1</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100009</stringId>
@@ -167,7 +168,7 @@
 		<npcName>도둑</npcName>
 		<patternId>0</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100010</stringId>
@@ -185,7 +186,7 @@
 		<npcName>도둑</npcName>
 		<patternId>4</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100011</stringId>
@@ -203,7 +204,7 @@
 		<npcName>도둑</npcName>
 		<patternId>4</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100012</stringId>
@@ -221,7 +222,7 @@
 		<npcName>도둑</npcName>
 		<patternId>4</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100013</stringId>
@@ -239,7 +240,7 @@
 		<npcName>도둑</npcName>
 		<patternId>4</patternId>
 		<cameraDirectionType>0</cameraDirectionType>
-		<scriptType>0</scriptType>
+		<scriptType>1</scriptType>
 		<scriptImageid>0</scriptImageid>
 		<scriptImageColorId>0</scriptImageColorId>
 		<stringId>100014</stringId>
