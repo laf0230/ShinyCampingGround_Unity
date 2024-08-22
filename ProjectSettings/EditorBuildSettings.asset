@@ -6,7 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/8.Scenes/Main.unity
+    path: Assets/8.Scenes/MountCampGround.unity
     guid: 1ad82837064bc0144a3dde907e5f5e69
+  - enabled: 1
+    path: Assets/8.Scenes/SeaCampGround.unity
+    guid: 50fdb10d6b427034b834f6cb4e83ce3e
   m_configObjects:
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 494d43307062c5847af8ab5fc40800ca, type: 2}
