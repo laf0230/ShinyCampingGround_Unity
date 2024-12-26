@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NegativeNPCController : NPCController
 {
-    public new bool isMetFirst = false;
+    public bool isMetFirst = false;
     public float knockdownTime = 2.05f;
     public WaitForSeconds knockdownDelay;
     public float stealTime = 3f;

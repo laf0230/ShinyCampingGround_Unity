@@ -34,13 +34,4 @@ public class KitController : MonoBehaviour
         }
         Destroy(gameObject);
     }
-/*
-    IEnumerator Sit()
-    {
-        foreach( Transform t in kit)
-        {
-            t.CompareTag("Chair");
-        }
-    }
-*/
 }

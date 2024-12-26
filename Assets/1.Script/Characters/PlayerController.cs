@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using System.Collections.Generic;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(GroundChecker))]
@@ -69,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isMoving = inputs.inputvalue.magnitude > 0.001f;
+        isMoving = inputs.inputValue.magnitude > 0.001f;
 
         Vector3 cameraForward = freeLookCamera.transform.forward;
         Vector3 cameraRight = freeLookCamera.transform.right;
@@ -79,13 +80,14 @@ public class PlayerController : MonoBehaviour
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        Vector3 moveDirection = cameraForward * inputs.inputvalue.y + cameraRight * inputs.inputvalue.x;
+        Vector3 moveDirection = cameraForward * inputs.inputValue.y + cameraRight * inputs.inputValue.x;
 
         if (moveDirection.magnitude > 0.1f)
         {
             // 캐릭터의 회전 처리
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            characterTransform.rotation = targetRotation;
+            StopAllCoroutines();
+            StartCoroutine(ICharacterRotation(targetRotation, 10f));
 
             // 캐릭터의 이동 처리
             characterController.Move(moveDirection * moveSpeed * Time.fixedDeltaTime);
@@ -107,6 +109,18 @@ public class PlayerController : MonoBehaviour
         characterController.Move(velocity * Time.fixedDeltaTime); // 중력에 의한 이동 적용
 
         SlidingCharacter();
+    }
+
+    public IEnumerator ICharacterRotation(Quaternion targetRotation, float rotationSpeed)
+    {
+        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.01f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        transform.rotation = targetRotation;
     }
 
     public void SlidingCharacter()

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3463042117102273213}
+  - component: {fileID: 4660802468483319176}
   m_Layer: 6
   m_Name: Tent
   m_TagString: Tent
@@ -32,6 +33,19 @@ Transform:
   - {fileID: 5879881916082543707}
   m_Father: {fileID: 9097634978185405629}
   m_LocalEulerAnglesHint: {x: 270, y: 0, z: 88.119}
+--- !u!114 &4660802468483319176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5478948635830328865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d770c264dc26140900c0614e536637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
 --- !u!1 &6080716442901081988
 GameObject:
   m_ObjectHideFlags: 0
@@ -41,6 +55,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4884267233238876988}
+  - component: {fileID: 8149813998309985893}
   m_Layer: 6
   m_Name: Chair
   m_TagString: Sit
@@ -64,6 +79,19 @@ Transform:
   - {fileID: 277875850304797870}
   m_Father: {fileID: 9097634978185405629}
   m_LocalEulerAnglesHint: {x: 0, y: -41.149, z: 0}
+--- !u!114 &8149813998309985893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6080716442901081988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d770c264dc26140900c0614e536637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
 --- !u!1 &6550587585374199644
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,6 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9097634978185405629}
   - component: {fileID: 3375015005833738743}
+  - component: {fileID: 6041702598424465491}
   m_Layer: 6
   m_Name: InfluencerKit
   m_TagString: Untagged
@@ -116,6 +145,20 @@ MonoBehaviour:
   - {fileID: 4884267233238876988}
   - {fileID: 3500306531372461883}
   kitIndex: 0
+--- !u!114 &6041702598424465491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6550587585374199644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32691db57422a043a1036756563e6a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tools: []
+  buildTurm: 0
 --- !u!1 &8918730510227953136
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +168,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3500306531372461883}
+  - component: {fileID: 8934624609530228330}
   m_Layer: 6
   m_Name: Mat
   m_TagString: Lie
@@ -148,6 +192,19 @@ Transform:
   - {fileID: 2592028307980708496}
   m_Father: {fileID: 9097634978185405629}
   m_LocalEulerAnglesHint: {x: 0, y: 34.687, z: 0}
+--- !u!114 &8934624609530228330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8918730510227953136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d770c264dc26140900c0614e536637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 2
 --- !u!1001 &311188043307342661
 PrefabInstance:
   m_ObjectHideFlags: 0

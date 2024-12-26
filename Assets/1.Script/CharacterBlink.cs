@@ -134,7 +134,7 @@ public class CharacterBlink : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError("Default Face is null");
+            Debug.LogError(e);
         }
     }
 

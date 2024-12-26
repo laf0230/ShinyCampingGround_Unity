@@ -8,45 +8,66 @@ using UnityEngine.AI;
 
 public class NPCController : MonoBehaviour
 {
-    public StateMachine stateMachine = new StateMachine();
-
     protected Rigidbody rb;
     protected NavMeshAgent navMeshAgent;
     protected bool isMoveable = true;
-
-    public GameObject tentTool;
-    public Animator animator { get; set; }
-    public GameObject trash;
+    
+    public enum ToolType
+    {
+        hammer
+    }
 
     [SerializeField] public string characterName;
     [SerializeField] public int id;
-    [SerializeField] public GameObject Character;
-    [SerializeField] public GameObject hammer;
-    [SerializeField] public GameObject campKit;
-    // [SerializeField] public 
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] public GameObject goal;
     [SerializeField] public List<GameObject> goals = new List<GameObject>();
     [SerializeField] public CinemachineVirtualCamera cam;
-    [SerializeField] public SpeechBubbleController SpeechBubbleController;
-    [SerializeField] public List<SODialogue> dialogues;
-    [SerializeField] public SODialogue randomSpeech;
     [SerializeField] public NPCInteraction interactionArea;
 
+    public CharacterBlink characterFace { get; set; }
+    private AudioSource audioSource;
+
+    public StateMachine stateMachine;
+    public BuildState buildState;
+    public IdleState idleState;
+    public PackState packState;
+
+    #region Model Variables
+
+    [SerializeField] protected GameObject Character;
+    [SerializeField] protected GameObject hammer;
+    [SerializeField] protected GameObject campKit;
+    [SerializeField] protected GameObject tentTool;
+    public GameObject trash;
+
+    #endregion
+
+    #region Animation variables
+
+    public Animator animator { get; set; }
     [SerializeField] public float randomAnimDuration = 10f;
     [SerializeField] public float totalRandomAnimDuration = 120f;
 
     [SerializeField] public WaitForSeconds randomAnimSec;
     [SerializeField] public WaitForSeconds totalRandomAnimSec;
-    [SerializeField] public List<TalkData> talkData { get; set; }
-    [SerializeField] TalkData currentTalkData;
-    [SerializeField] public int currentTalkID = 0;
 
-    public CharacterBlink characterFace { get; set; }
-    private AudioSource audioSource;
+    #endregion
+
+    #region Talk
+
+    [SerializeField] public List<SODialogue> dialogues;
+    [SerializeField] public List<TalkData> talkData { get; set; }
+    [SerializeField] public SODialogue randomSpeech;
+    [SerializeField] public SpeechBubbleController SpeechBubbleController;
+    [SerializeField] private TalkData currentTalkData;
+    [SerializeField] public int currentTalkID = 0;
+    
     private List<TalkController> talks = new List<TalkController>();
     private GeneralTalk generalTalk;
     private SpecialTalk specialTalk;
+
+    #endregion
 
     public bool isRandomAction = false;
     public bool isMetFirst = true;
@@ -54,6 +75,11 @@ public class NPCController : MonoBehaviour
 
     private void Awake()
     {
+        stateMachine = new StateMachine();
+        buildState = new BuildState(this, stateMachine);
+        idleState = new IdleState(this, stateMachine);
+        packState = new PackState(this, stateMachine);
+
         generalTalk = new GeneralTalk(this);
         specialTalk = new SpecialTalk(this);
 
@@ -63,6 +89,8 @@ public class NPCController : MonoBehaviour
 
     protected virtual void Start()
     {
+        stateMachine.InitializeState(idleState);
+
         characterFace = GetComponent<CharacterBlink>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
@@ -92,7 +120,8 @@ public class NPCController : MonoBehaviour
 
     private void Update()
     {
-
+        stateMachine.currentState.Execute();
+        
         if (GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() && GameManager.Instance.uIManager.dialogueManager.IsTyping())
         {
             GameManager.Instance.uIManager.dialogueManager.SetCompleteDialogue();
@@ -117,9 +146,12 @@ public class NPCController : MonoBehaviour
 
     protected virtual IEnumerator MoveTo(GameObject wayPoint)
     {
+        yield return null;
         animator.SetBool("IsMove", true);
         while (true)
         {
+            yield return null;
+
             if (Vector3.Distance(wayPoint.transform.position, transform.position) < 1f)
             {
                 Debug.Log("Goal to target");
@@ -135,11 +167,102 @@ public class NPCController : MonoBehaviour
             {
                 navMeshAgent.SetDestination(wayPoint.transform.position);
             }
+        }
+    }
 
-            // rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
+    public class BuildState : State
+    {
+        EachCampingPlacementManager campingPlacementManager;
 
+        public BuildState(NPCController controller, StateMachine stateMachine) : base(controller, stateMachine)
+        {
+            campingPlacementManager = controller.campKit.GetComponent<EachCampingPlacementManager>();
+        }
 
-            yield return new WaitForFixedUpdate();
+        public override void EnterState()
+        {
+            campingPlacementManager.Build();
+            controller.animator.SetBool("IsBuild", true);
+            controller.SetActiveTool(ToolType.hammer, true);
+            controller.audioSource.Play();
+        }
+
+        public override void Execute()
+        {
+            if (campingPlacementManager.isBuildFinish)
+            {
+                stateMachine.ChangeState(controller.idleState);
+            }
+        }
+
+        public override void ExitState()
+        {
+            controller.animator.SetBool("IsBuild", false);
+            controller.SetActiveTool(ToolType.hammer, false);
+            controller.audioSource.Stop();
+        }
+    }
+
+    public class IdleState : State
+    {
+        public IdleState(NPCController NPC, StateMachine stateMachine) : base(NPC, stateMachine)
+        {
+        }
+    }
+
+    public class PackState : State
+    {
+        EachCampingPlacementManager campingPlacementManager;
+        public PackState(NPCController controller, StateMachine stateMachine) : base(controller, stateMachine)
+        {
+            campingPlacementManager = controller.campKit.GetComponent<EachCampingPlacementManager> ();
+        }
+
+        public override void EnterState()
+        {
+            controller.SetActiveTool(ToolType.hammer, true);
+            controller.audioSource.Play();
+            controller.animator.SetBool("IsBuild", true);
+            campingPlacementManager.Pack();
+        }
+
+        public override void Execute()
+        {
+            if(campingPlacementManager.isBuildFinish)
+            {
+                stateMachine.ChangeState (controller.idleState);
+            }
+        }
+
+        public override void ExitState()
+        {
+            controller.SetActiveTool(ToolType.hammer, false);
+            controller.audioSource.Stop();
+        }
+    }
+
+    public class CampimgState : State
+    {
+        EachCampingPlacementManager campingManager;
+        CampingPlacement campingPlacement;
+        float startTime = 0;
+
+        public CampimgState(NPCController controller, StateMachine stateMachine) : base(controller, stateMachine)
+        {
+            campingManager = controller.campKit.GetComponent<EachCampingPlacementManager>();
+            campingPlacement = campingManager.GetRandomPlacement();
+        }
+    }
+
+    public class MoveState : State
+    {
+        public MoveState(NPCController controller, StateMachine stateMachine) : base(controller, stateMachine)
+        {
+        }
+
+        public override void EnterState()
+        {
+            controller.SetAnimation(AnimType.Walk, true);
         }
     }
 
@@ -223,7 +346,6 @@ public class NPCController : MonoBehaviour
             if (talk == talks[0])
                 GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
 
-            Debug.Log("Dialogue end");
             if (currentTalkData.nextScriptID == 0)
             {
                 // 다음 대사가 없으면 다음 id로 넘어가는 코드
@@ -257,9 +379,6 @@ public class NPCController : MonoBehaviour
 
             rb.isKinematic = true;
 
-            // Reset all animations to false if there is a change
-            bool animationChanged = false;
-
             if (prevFurnitureTag == furnitureTag)
                 Debug.Log("같은 애니메이션이 싫행되었습니다.    : " + characterName);
 
@@ -279,14 +398,12 @@ public class NPCController : MonoBehaviour
                     transform.position = furniture.transform.position;
                     transform.rotation = furniture.transform.rotation;
                     animator.SetBool("IsSit", true);
-                    animationChanged = true;
                     yield return randomAnimSec;
                     break;
                 case "Lie":
                     transform.position = furniture.transform.position;
                     transform.rotation = furniture.transform.rotation;
                     animator.SetBool("IsLie", true);
-                    animationChanged = true;
                     yield return randomAnimSec;
                     break;
                 case "Tent":
@@ -295,7 +412,6 @@ public class NPCController : MonoBehaviour
                     if (tentTool != null)
                         tentTool.SetActive(true);
                     animator.SetBool("IsTent", true);
-                    animationChanged = true;
 
                     AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
                     if (clipInfo.Length > 0)
@@ -323,7 +439,6 @@ public class NPCController : MonoBehaviour
         animator.SetBool("IsTent", false);
         isRandomAction = false;
     }
-
 
     public void ActiveRandomDialogue(bool active)
     {
@@ -359,5 +474,63 @@ public class NPCController : MonoBehaviour
     public void SetFirstMet(bool isFirstMet)
     {
         this.isMetFirst = isFirstMet;
+    }
+    
+    public void SetActiveTool(ToolType tool, bool activeTool)
+    {
+        switch (tool)
+        {
+            case ToolType.hammer:
+                hammer.SetActive(activeTool);
+                break;
+        }
+    }
+
+    public enum AnimType
+    {
+        Idle,
+        Walk,
+        Work,
+        Build,
+        Sit,
+        Lie,
+        Help,
+        Joy,
+        Think,
+        Wave,
+        Unique
+    }
+
+    public void SetAnimation(AnimType type, bool active)
+    {
+        switch (type)
+        {
+            case AnimType.Idle:
+                break;
+            case AnimType.Walk:
+                break;
+            case AnimType.Work:
+                break;
+            case AnimType.Build:
+                animator.SetBool("IsBuild", true);
+                break;
+            case AnimType.Sit:
+                animator.SetBool("IsSit", true);
+                break;
+            case AnimType.Lie:
+                animator.SetBool("IsLie", true);
+                break;
+            case AnimType.Help:
+                break;
+            case AnimType.Joy:
+                break;
+            case AnimType.Think:
+                break;
+            case AnimType.Wave:
+                break;
+            case AnimType.Unique:
+                animator.SetBool("IsTent", true);
+                break;
+        }
     }
 }
