@@ -74,22 +74,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Time.timeScale = 0.5f;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Time.timeScale = 1.0f;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Time.timeScale = 2f;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            Time.timeScale = 5f;
-        }
+        #region Game Speed
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha1)) { Time.timeScale *= 0.5f; }
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha2)) { Time.timeScale = 1f; }
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha3)) { Time.timeScale /= 0.5f; }
+
+        #endregion
     }
 
     public void GameStart()
@@ -104,6 +95,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(17f);
 
+        Debug.Log("Spawn PetOwner");
         yield return StartCoroutine(SpawnNPC(npcs[1], entrance.gameObject.transform.position, 1));
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(26f);

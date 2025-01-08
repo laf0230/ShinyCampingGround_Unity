@@ -11,7 +11,7 @@ public class NPCController : MonoBehaviour
     protected Rigidbody rb;
     protected NavMeshAgent navMeshAgent;
     protected bool isMoveable = true;
-    
+
     public enum ToolType
     {
         hammer
@@ -56,12 +56,12 @@ public class NPCController : MonoBehaviour
 
     #region Talk
 
-    [SerializeField] public List<SODialogue> dialogues;
+    [SerializeField] public List<DialogueSO> dialogues;
     [SerializeField] public List<TalkData> talkData { get; set; }
-    [SerializeField] public SODialogue randomSpeech;
-    [SerializeField] public SpeechBubbleController SpeechBubbleController;
-    [SerializeField] private TalkData currentTalkData;
-    [SerializeField] public int currentTalkID = 0;
+    [SerializeField] public DialogueSO randomSpeech;
+    private int currentTalkID { get; set; } = 0;
+    
+    public SpeechBubbleController speechBubbleController { get; private set; }
     
     private List<TalkController> talks = new List<TalkController>();
     private GeneralTalk generalTalk;
@@ -73,12 +73,31 @@ public class NPCController : MonoBehaviour
     public bool isMetFirst = true;
     public bool isDestination;
 
-    private void Awake()
+    protected virtual void Start()
     {
+        #region StateMachine
+
         stateMachine = new StateMachine();
         buildState = new BuildState(this, stateMachine);
         idleState = new IdleState(this, stateMachine);
         packState = new PackState(this, stateMachine);
+        stateMachine.InitializeState(idleState);
+
+        #endregion
+
+        characterFace = GetComponent<CharacterBlink>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        audioSource = GetComponent<AudioSource>();
+        randomAnimSec = new WaitForSeconds(randomAnimDuration);
+        totalRandomAnimSec = new WaitForSeconds(totalRandomAnimDuration);
+        cam.Priority = 9;
+        
+        rb = GetComponent<Rigidbody>();
+        animator = Character.GetComponent<Animator>();
+        cam = GetComponentInChildren<CinemachineVirtualCamera>();
+
+
+        speechBubbleController = GetComponentInChildren<SpeechBubbleController>();
 
         generalTalk = new GeneralTalk(this);
         specialTalk = new SpecialTalk(this);
@@ -87,25 +106,9 @@ public class NPCController : MonoBehaviour
         talks.Add(generalTalk);
     }
 
-    protected virtual void Start()
-    {
-        stateMachine.InitializeState(idleState);
-
-        characterFace = GetComponent<CharacterBlink>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        audioSource = GetComponent<AudioSource>();
-        randomAnimSec = new WaitForSeconds(randomAnimDuration);
-        totalRandomAnimSec = new WaitForSeconds(totalRandomAnimDuration);
-        cam.Priority = 9;
-    }
-
     public void OnEnable()
     {
-        rb = GetComponent<Rigidbody>();
-        animator = Character.GetComponent<Animator>();
-        cam = GetComponentInChildren<CinemachineVirtualCamera>();
-
-        // npc id가 동일한 대사 불러오기
+        // NPC ID가 같은 ID를 가진 대사 목록 할당
         talkData = GameManager.Instance.dataManager.talkData
             .Cast<TalkData>()
             .Where(item => item.npcID == id)
@@ -312,7 +315,7 @@ public class NPCController : MonoBehaviour
             if (characterFace != null)
                 characterFace.ActiveTalk(true);
 
-            currentTalkData = talkData.FirstOrDefault((x) => x.id == currentTalkID);
+            var currentTalkData = talkData.FirstOrDefault((x) => x.id == currentTalkID);
 
             // talk의 타입 정하기
             talk = talks[currentTalkData.scriptType];
@@ -340,6 +343,7 @@ public class NPCController : MonoBehaviour
             if (GameManager.Instance.uIManager.dialogueManager.IsSkipRequested())
             {
                 Debug.Log("Skip requeset " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
+                UIManager.instance.dialogueManager.DisableDialogue();
                 break; // while break
             }
 
@@ -449,16 +453,16 @@ public class NPCController : MonoBehaviour
             if (characterFace != null)
                 characterFace.ActiveTalk(true);
 
-            SpeechBubbleController.SetName(characterName);
-            SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
-            SpeechBubbleController.ActiveBubble();
+            speechBubbleController.SetName(characterName);
+            speechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
+            speechBubbleController.ActiveBubble();
         }
         else
         {
             if (characterFace != null)
                 characterFace.ActiveTalk(false);
 
-            SpeechBubbleController.DisableBubble();
+            speechBubbleController.DisableBubble();
         }
     }
 
@@ -466,9 +470,9 @@ public class NPCController : MonoBehaviour
     {
         int randomIndex = Random.Range(0, randomSpeech.dialogues.Count);
 
-        SpeechBubbleController.SetName(characterName);
-        SpeechBubbleController.FlickBubble();
-        SpeechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
+        speechBubbleController.SetName(characterName);
+        speechBubbleController.FlickBubble();
+        speechBubbleController.SetText(randomSpeech.dialogues[randomIndex]);
     }
 
     public void SetFirstMet(bool isFirstMet)
@@ -484,21 +488,6 @@ public class NPCController : MonoBehaviour
                 hammer.SetActive(activeTool);
                 break;
         }
-    }
-
-    public enum AnimType
-    {
-        Idle,
-        Walk,
-        Work,
-        Build,
-        Sit,
-        Lie,
-        Help,
-        Joy,
-        Think,
-        Wave,
-        Unique
     }
 
     public void SetAnimation(AnimType type, bool active)

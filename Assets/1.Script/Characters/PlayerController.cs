@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private Camera freeLookCamera;
     public List<GameObject> characters;
     public GameObject playerObject;
-    public SODialogue dialogues;
+    public DialogueSO dialogues;
     public NPCInteraction nPCInteraction;
     public int currentCharacterIndex = 0;
 

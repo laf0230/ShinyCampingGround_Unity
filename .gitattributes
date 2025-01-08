@@ -5,3 +5,4 @@ day.wav filter=lfs diff=lfs merge=lfs -text
 main.wav filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
 mountCampGround.unity filter=lfs diff=lfs merge=lfs -text
+8.Scenes/** filter=lfs diff=lfs merge=lfs -text

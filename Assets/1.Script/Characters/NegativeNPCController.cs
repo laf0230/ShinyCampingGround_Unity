@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NegativeNPCController : NPCController
 {
-    public bool isMetFirst = false;
+    public new bool isMetFirst = false;
     public float knockdownTime = 2.05f;
     public WaitForSeconds knockdownDelay;
     public float stealTime = 3f;
@@ -23,6 +23,7 @@ public class NegativeNPCController : NPCController
 
     public override IEnumerator ActionSequence()
     {
+        // TODO: 반복되는 코드를 줄이기
         Debug.Log("좀도둑 활동 시작!");
         yield return Enter();
 
@@ -80,7 +81,7 @@ public class NegativeNPCController : NPCController
             NPCController characterController = npc.GetComponent<NPCController>();
             if (characterController != null && characterController.gameObject.GetComponent<NegativeNPCController>() == null)
             {
-                SpeechBubbleController speechBubbleController = characterController.SpeechBubbleController;
+                SpeechBubbleController speechBubbleController = characterController.speechBubbleController;
                 if (speechBubbleController != null)
                 {
                     speechBubbleController.FlickPossitiveUP();

@@ -57,9 +57,9 @@ public class GeneralTalk : TalkController, ITalkable
     public override IEnumerator Talk()
     {
         yield return null;
-        Controller.SpeechBubbleController.SetName(Name);
-        Controller.SpeechBubbleController.SetText(Text);
-        Controller.SpeechBubbleController.FlickBubble();
+        Controller.speechBubbleController.SetName(Name);
+        Controller.speechBubbleController.SetText(Text);
+        Controller.speechBubbleController.FlickBubble();
     }
 }
 
@@ -72,7 +72,6 @@ public class SpecialTalk : TalkController, ITalkable
 
     public override IEnumerator Talk()
     {
-
         Controller.cam.Priority = 11;
 
         if (Name == null)
@@ -80,24 +79,24 @@ public class SpecialTalk : TalkController, ITalkable
             Debug.Log(CurrentTalkData.npcName + "Character Name is null");
         }
 
-        GameManager.Instance.uIManager.dialogueManager.ActiveDialogue(Name, Text);
+        UIManager.instance.dialogueManager.ActiveDialogue(Name, Text);
         // 텍스트가 완성되지 않았을 때 오토 해제 시 자동 넘어가기 취소
-        if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
+        if (!UIManager.instance.dialogueManager.IsAutoText())
         {
             // 터치 혹은 스킵
             yield return null;
-            yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
+            yield return new WaitUntil(() => UIManager.instance.dialogueManager.IsNextDialogueRequested() || UIManager.instance.dialogueManager.IsSkipRequested());
         }
         else
         {
             // 오토 모드
-            yield return new WaitUntil(() => !GameManager.Instance.uIManager.dialogueManager.IsTyping());
+            yield return new WaitUntil(() => !UIManager.instance.dialogueManager.IsTyping());
 
             // 오토 모드가 해제되었는지 확인
-            if (!GameManager.Instance.uIManager.dialogueManager.IsAutoText())
+            if (!UIManager.instance.dialogueManager.IsAutoText())
             {
                 // 오토 모드가 해제되었을 때, 사용자가 다음 대사나 스킵을 요청할 때까지 대기
-                yield return new WaitUntil(() => GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() || GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
+                yield return new WaitUntil(() => UIManager.instance.dialogueManager.IsNextDialogueRequested() || UIManager.instance.dialogueManager.IsSkipRequested());
             }
             else
             {
