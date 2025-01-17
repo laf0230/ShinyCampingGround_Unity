@@ -138,7 +138,19 @@ public class NPCController : MonoBehaviour
 
     public virtual IEnumerator ActionSequence()
     {
+        // 캐릭터 수 제한
         yield return null;
+        var characters = FindObjectsByType<NPCController>(sortMode: FindObjectsSortMode.None);
+        var characterSameTypeCount = characters.Count(item => item.characterName == this.characterName);
+
+        if(characterSameTypeCount > 2)
+        {
+            yield return MoveTo(goals[goals.Count - 1]);
+            yield return Talk(dialogues.Count - 1);
+            gameObject.SetActive(false);
+
+            yield break;
+        }
     }
 
     protected virtual IEnumerator Enter()
@@ -364,6 +376,68 @@ public class NPCController : MonoBehaviour
 
         cam.Priority = 9; // 카메라 순서 변경
     }
+
+    protected IEnumerator Talk(int dialogueIndex)
+    {
+        TalkController talk;
+        Debug.Log(gameObject.name + " : state Enter: Talk");
+
+        // 다음 텍스트가 없을 경우 종료
+        while (true)
+        {
+            if (characterFace != null)
+                characterFace.ActiveTalk(true);
+
+            var currentTalkData = talkData[dialogueIndex];
+
+            // talk의 타입 정하기
+            talk = talks[currentTalkData.scriptType];
+            talk.SetTalkData(currentTalkData);
+
+            // 첫 만남이 아닐 때
+            if (!isMetFirst)
+            {
+                talk = talks[1];
+            }
+            else
+            {
+                talk = talks[currentTalkData.scriptType];
+            }
+
+            if (talk.Name != null && talk.Text != null)
+            {
+                yield return StartCoroutine(talk.Talk());
+            }
+
+
+            if (characterFace != null)
+                characterFace.ActiveTalk(false);
+
+            if (GameManager.Instance.uIManager.dialogueManager.IsSkipRequested())
+            {
+                Debug.Log("Skip requeset " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
+                UIManager.instance.dialogueManager.DisableDialogue();
+                break; // while break
+            }
+
+            if (talk == talks[0])
+                GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
+
+            if (currentTalkData.nextScriptID == 0)
+            {
+                // 다음 대사가 없으면 다음 id로 넘어가는 코드
+                currentTalkID++;
+                break;
+            }
+
+            // 다음 대사를 현재 대사에 대입하는 코드
+            currentTalkID = currentTalkData.nextScriptID;
+        }
+
+
+        cam.Priority = 9; // 카메라 순서 변경
+    }
+
 
     protected virtual IEnumerator RandomAction()
     {

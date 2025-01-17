@@ -113,6 +113,29 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(26f);
 
         yield return StartCoroutine(SpawnNPC(npcs[5], negativeEntrance.transform.position, 5));
+
+        // Random Spawn
+        while (true)
+        {
+            yield return null;
+            var gameCharacters = GameObject.FindObjectsByType<NPCController>(sortMode: FindObjectsSortMode.InstanceID);
+
+            if (gameCharacters.Length <= 5)
+            {
+                var randomturm = Random.Range(17f, 26f);
+                yield return new WaitForSeconds(randomturm);
+                var randomNum = Random.Range(1, npcs.Count);
+                if (randomNum == 2 || randomNum == 5)
+                {
+                    yield return StartCoroutine(SpawnNPC(npcs[randomNum - 1], negativeEntrance.transform.position, randomNum - 1));
+                }
+                else
+                {
+                    yield return StartCoroutine(SpawnNPC(npcs[randomNum - 1], entrance.gameObject.transform.position, randomNum - 1));
+                }
+            }
+        }
+
     }
 
     public IEnumerator SpawnNPC(GameObject npc, Vector3 spawnPoint, int npcIndex)
