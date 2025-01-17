@@ -104,10 +104,7 @@ public class NPCController : MonoBehaviour
 
         talks.Add(specialTalk);
         talks.Add(generalTalk);
-    }
-
-    public void OnEnable()
-    {
+        
         // NPC ID가 같은 ID를 가진 대사 목록 할당
         talkData = GameManager.Instance.dataManager.talkData
             .Cast<TalkData>()
@@ -117,6 +114,10 @@ public class NPCController : MonoBehaviour
         // npc 대사 중 첫번째 대사 불러오기
         currentTalkID = talkData[0].id;
 
+    }
+
+    public void OnEnable()
+    {
         if (characterFace != null)
             characterFace.ActiveBlink(true);
     }
@@ -142,7 +143,7 @@ public class NPCController : MonoBehaviour
         yield return null;
         var characters = FindObjectsByType<NPCController>(sortMode: FindObjectsSortMode.None);
         var characterSameTypeCount = characters.Count(item => item.characterName == this.characterName);
-
+/*
         if(characterSameTypeCount > 2)
         {
             yield return MoveTo(goals[goals.Count - 1]);
@@ -151,6 +152,7 @@ public class NPCController : MonoBehaviour
 
             yield break;
         }
+*/
     }
 
     protected virtual IEnumerator Enter()
@@ -334,7 +336,7 @@ public class NPCController : MonoBehaviour
             talk.SetTalkData(currentTalkData);
 
             // 첫 만남이 아닐 때
-            if (!isMetFirst)
+            if (isMetFirst)
             {
                 talk = talks[1];
             }
@@ -377,6 +379,7 @@ public class NPCController : MonoBehaviour
         cam.Priority = 9; // 카메라 순서 변경
     }
 
+    /*
     protected IEnumerator Talk(int dialogueIndex)
     {
         TalkController talk;
@@ -438,6 +441,7 @@ public class NPCController : MonoBehaviour
         cam.Priority = 9; // 카메라 순서 변경
     }
 
+    */
 
     protected virtual IEnumerator RandomAction()
     {

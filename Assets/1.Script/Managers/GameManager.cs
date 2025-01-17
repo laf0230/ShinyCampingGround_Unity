@@ -17,10 +17,10 @@ public class GameManager : MonoBehaviour
     public List<GameObject> npcs;
     [Header("Scenes")]
     public List<string> sceneNameList;
-    public Scene scene;
 
-    public bool isMetInfluencer = false;
-    public bool isMetPetOwner = false;
+    // false == 처음 만남    // true == 처음만난게 아님
+    public bool isMetInfluencer { get; set; } = true;
+    public bool isMetPetOwner { get; set; } = true;
 
     private WaitForSeconds spawnDelay = new WaitForSeconds(3f);
 
@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
         if (controller != null && negativeController == null)
         {
             // 긍정적인 캐릭터 처리
-            if ((npc.name == "Influencer" && isMetInfluencer == false) || (npc.name == "PetOwner" && isMetPetOwner == false))
+            if ((npc.name == "Influencer" && isMetInfluencer == true) || (npc.name == "PetOwner" && isMetPetOwner == true))
             {
                 SoundManager.Instance.PlaySFXMusic("PositiveEnter");
 

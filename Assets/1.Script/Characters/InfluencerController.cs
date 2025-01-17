@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class InfluencerController : NPCController
 {
+    private void Awake()
+    {
+        gameObject.name = "Influencer";
+    }
+
     public override IEnumerator ActionSequence()
     {
         yield return Enter();
 
-        if (!GameManager.Instance.isMetInfluencer)
+        if (GameManager.Instance.isMetInfluencer == true)
         {
-            yield return Talk();
-            GameManager.Instance.isMetInfluencer = true;
-            isMetFirst = false;
+            GameManager.Instance.isMetInfluencer = false;
         }
-        else
-        {
-            yield return Talk();
-        }
+
+        isMetFirst = !GameManager.Instance.isMetInfluencer;
+
+
+        yield return Talk();
         
         yield return MoveTo(goals[0]);
         yield return MoveTo(goals[1]);

@@ -4,19 +4,24 @@ using UnityEngine;
 
 public class PetOwnerController : NPCController
 {
+    private void Awake()
+    {
+        gameObject.name = "PetOwner";
+    }
+
     public override IEnumerator ActionSequence()
     {
         yield return Enter();
 
-        if (!GameManager.Instance.isMetPetOwner)
+
+        if (GameManager.Instance.isMetPetOwner == true)
         {
-            yield return Talk();
-            GameManager.Instance.isMetPetOwner = true;
+            GameManager.Instance.isMetPetOwner = false;
         }
-        else
-        {
-            yield return Talk();
-        }
+
+        isMetFirst = !GameManager.Instance.isMetPetOwner;
+
+        yield return Talk();
 
          yield return MoveTo(goals[0]);
         yield return Talk();
