@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> npcs;
     [Header("Scenes")]
     public List<string> sceneNameList;
+    public Scene scene;
 
     public bool isMetInfluencer = false;
     public bool isMetPetOwner = false;

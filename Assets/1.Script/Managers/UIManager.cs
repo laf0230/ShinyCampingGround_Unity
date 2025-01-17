@@ -16,6 +16,8 @@ public class UIManager : MonoBehaviour
 {
     public List<UI> UIS = new List<UI>();
     public GameObject[] uis;
+    [Header("UIs")]
+    public TitleUI titleUI;
 
     public GameObject mainAlert;
     public GameObject subAlert;
@@ -61,7 +63,9 @@ public class UIManager : MonoBehaviour
         {
             UIS[i].Close();
         }
-        ChangeUI("Title");
+
+        titleUI.gameObject.SetActive(true);
+
         coinAlermDuration = new WaitForSeconds(coinAlermTime);
         changePlayerCharacterBtn.onClick.AddListener(ChangeCharacter);
         graphySwitchBtrn.onClick.AddListener(SwitchDebugMode);
@@ -70,12 +74,14 @@ public class UIManager : MonoBehaviour
     #region UI Controller
     public void ChangeUI(string name)
     {
+        /*
         if(name == "Title")
         {
             GameObject title = Array.Find(uis,x => x.name == name);
             title.SetActive(true);
             SoundManager.Instance.PlayMusic("Title");
-        } else if(name == "Main")
+        }
+        if(name == "Main")
         {
             GameObject[] _uis = Array.FindAll(this.uis,x => x.name != "Title");
             GameObject title = Array.Find(this.uis, x => x.name == "Title");
@@ -87,11 +93,12 @@ public class UIManager : MonoBehaviour
                 u.SetActive(true);
             }
         }
+        */
     }
 
     public void ResetGame()
     {
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene(GameManager.Instance.sceneNameList[0]);
     }
 
     #endregion

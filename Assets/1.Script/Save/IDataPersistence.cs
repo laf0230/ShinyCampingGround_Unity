@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IDataPersistence
 {
-    void Save();
-    void Load();
+    void SaveData(ref GameData data);
+    void Load(GameData data);
 }

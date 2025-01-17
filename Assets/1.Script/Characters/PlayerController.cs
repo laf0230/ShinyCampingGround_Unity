@@ -5,7 +5,7 @@ using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(GroundChecker))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDataPersistence
 {
     public float moveSpeed = 5f;
     public float gravity = 9.81f;
@@ -194,6 +194,17 @@ public class PlayerController : MonoBehaviour
 
         // Animation Change
         animator = model.GetComponent<Animator>();
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.PlayerPosition = transform.position;
+        data.PlayerDirection = transform.rotation;
+    }
+
+    public void Load(GameData data)
+    {
+        throw new System.NotImplementedException();
     }
 }
 

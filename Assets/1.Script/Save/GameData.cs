@@ -4,13 +4,24 @@ using UnityEngine;
 [CreateAssetMenu]
 public class GameData : ScriptableObject
 {
-    public int Gold = 0;
-    public int Leaf = 0;
-    public Vector3 PlayerPosition = Vector3.zero;
-    public Vector3 PlayerDirection = Vector3.zero;
-    public float PlayerExprience = 0;
-    public int PlayerLevel = 0;
-    public NPCData NPCData = new NPCData();
+    public int Gold;
+    public int Leaf;
+    public Vector3 PlayerPosition;
+    public Quaternion PlayerDirection;
+    public float PlayerExprience;
+    public int PlayerLevel;
+    public NPCData NPCData;
+
+    public GameData()
+    {
+        Gold = 0;
+        Leaf = 0;
+        PlayerPosition = Vector3.zero;
+        PlayerDirection = Quaternion.identity;
+        PlayerExprience = 0;
+        PlayerLevel = 0;
+        NPCData = new NPCData();
+    }
 }
 
 public class NPCData
