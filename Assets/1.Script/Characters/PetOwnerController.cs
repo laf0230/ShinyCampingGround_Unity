@@ -9,6 +9,7 @@ public class PetOwnerController : NPCController
         gameObject.name = "PetOwner";
     }
 
+    /*
     public override IEnumerator ActionSequence()
     {
         yield return Enter();
@@ -23,7 +24,7 @@ public class PetOwnerController : NPCController
 
         yield return Talk();
 
-         yield return MoveTo(goals[0]);
+        yield return MoveTo(goals[0]);
         yield return Talk();
         yield return new WaitForSeconds(2f);
         yield return Build(kit: campKit);
@@ -36,4 +37,5 @@ public class PetOwnerController : NPCController
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
     }
+    */
 }

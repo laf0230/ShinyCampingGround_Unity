@@ -20,18 +20,13 @@ public class NPCController : MonoBehaviour
     [SerializeField] public string characterName;
     [SerializeField] public int id;
     [SerializeField] public float moveSpeed = 5f;
-    [SerializeField] public GameObject goal;
-    [SerializeField] public List<GameObject> goals = new List<GameObject>();
+    [SerializeField] public List<GameObject> goals { get; set; } = new List<GameObject>();
     [SerializeField] public CinemachineVirtualCamera cam;
     [SerializeField] public NPCInteraction interactionArea;
+    [SerializeField] public Queue<System.Action> characterActionsQueue = new Queue<System.Action>();
 
     public CharacterBlink characterFace { get; set; }
     private AudioSource audioSource;
-
-    public StateMachine stateMachine;
-    public BuildState buildState;
-    public IdleState idleState;
-    public PackState packState;
 
     #region Model Variables
 
@@ -75,16 +70,6 @@ public class NPCController : MonoBehaviour
 
     protected virtual void Start()
     {
-        #region StateMachine
-
-        stateMachine = new StateMachine();
-        buildState = new BuildState(this, stateMachine);
-        idleState = new IdleState(this, stateMachine);
-        packState = new PackState(this, stateMachine);
-        stateMachine.InitializeState(idleState);
-
-        #endregion
-
         characterFace = GetComponent<CharacterBlink>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
@@ -124,7 +109,7 @@ public class NPCController : MonoBehaviour
 
     private void Update()
     {
-        stateMachine.currentState.Execute();
+        // stateMachine.currentState.Execute();
         
         if (GameManager.Instance.uIManager.dialogueManager.IsNextDialogueRequested() && GameManager.Instance.uIManager.dialogueManager.IsTyping())
         {
@@ -155,12 +140,120 @@ public class NPCController : MonoBehaviour
 */
     }
 
+    #region Phase
+
     protected virtual IEnumerator Enter()
     {
+        yield return Talk();
 
         yield return new WaitForFixedUpdate();
     }
 
+    public void SetCharacterRoutine()
+    {
+        Debug.Log("Routine Setted");
+        characterActionsQueue.Clear();
+
+        characterActionsQueue.Enqueue(DoEnter);
+        characterActionsQueue.Enqueue(DOTour);
+        characterActionsQueue.Enqueue(DoCamping);
+        characterActionsQueue.Enqueue(DoExit);
+
+        StartActionRoutine();
+    }
+
+    public void StartActionRoutine()
+    {
+        if(characterActionsQueue.Count > 0)
+        {
+            var nextAction = characterActionsQueue.Dequeue();
+            nextAction.Invoke();
+        } else
+        {
+            Debug.Log("All actions complete");
+        }
+    }
+
+    public void DOTour() => StartCoroutine(Tour());
+
+    public void DoCamping() => StartCoroutine (Camping());
+
+    public void DoExit() => StartCoroutine(Exit());
+
+    public void DoEnter() => StartCoroutine(Enter2()); 
+
+    private IEnumerator Enter2()
+    {
+        Debug.Log("Enter");
+        goals = GameManager.Instance.wayPointManager.GetWayPoint(name);
+        SetFirstMet(GameManager.Instance.characterManager.IsCharacterVisitFirst(this));
+
+        yield return new WaitForSeconds(1f);
+
+        if (goals != null)
+        {
+
+            Debug.Log(goals.ToString());
+
+            yield return Talk();
+
+            StartActionRoutine();
+        }
+    }
+
+    private IEnumerator Tour()
+    {
+
+        int goalIndex = 0;
+
+        while (true)
+        {
+            if (goals[goalIndex].GetComponent<CampSite>())
+            {
+                StartActionRoutine();
+                break;
+            }
+            else
+            {
+                yield return Talk();
+                yield return MoveTo(goals[goalIndex]);
+                goalIndex++;
+            }
+            yield return new WaitForSeconds(2f);
+        }
+    }
+
+    private IEnumerator Camping()
+    {
+        var camp = GameManager.Instance.campingManager.GetUseableCampSite();
+        if (camp != null)
+        {
+            yield return MoveTo(camp.gameObject);
+            yield return Talk();
+            yield return Build(campKit);
+            yield return RandomAction();
+            yield return Pack(campKit);
+            Instantiate(trash, transform.position, Quaternion.identity);
+        }
+
+        StartActionRoutine();
+    }
+
+    private IEnumerator Exit()
+    {
+        yield return MoveTo(GameManager.Instance.campingManager.exit.gameObject);
+        yield return Talk();
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
+
+        yield return null;
+    }
+
+    #endregion
+
+
+    #region Action
+    
     protected virtual IEnumerator MoveTo(GameObject wayPoint)
     {
         yield return null;
@@ -184,102 +277,6 @@ public class NPCController : MonoBehaviour
             {
                 navMeshAgent.SetDestination(wayPoint.transform.position);
             }
-        }
-    }
-
-    public class BuildState : State
-    {
-        EachCampingPlacementManager campingPlacementManager;
-
-        public BuildState(NPCController controller, StateMachine stateMachine) : base(controller, stateMachine)
-        {
-            campingPlacementManager = controller.campKit.GetComponent<EachCampingPlacementManager>();
-        }
-
-        public override void EnterState()
-        {
-            campingPlacementManager.Build();
-            controller.animator.SetBool("IsBuild", true);
-            controller.SetActiveTool(ToolType.hammer, true);
-            controller.audioSource.Play();
-        }
-
-        public override void Execute()
-        {
-            if (campingPlacementManager.isBuildFinish)
-            {
-                stateMachine.ChangeState(controller.idleState);
-            }
-        }
-
-        public override void ExitState()
-        {
-            controller.animator.SetBool("IsBuild", false);
-            controller.SetActiveTool(ToolType.hammer, false);
-            controller.audioSource.Stop();
-        }
-    }
-
-    public class IdleState : State
-    {
-        public IdleState(NPCController NPC, StateMachine stateMachine) : base(NPC, stateMachine)
-        {
-        }
-    }
-
-    public class PackState : State
-    {
-        EachCampingPlacementManager campingPlacementManager;
-        public PackState(NPCController controller, StateMachine stateMachine) : base(controller, stateMachine)
-        {
-            campingPlacementManager = controller.campKit.GetComponent<EachCampingPlacementManager> ();
-        }
-
-        public override void EnterState()
-        {
-            controller.SetActiveTool(ToolType.hammer, true);
-            controller.audioSource.Play();
-            controller.animator.SetBool("IsBuild", true);
-            campingPlacementManager.Pack();
-        }
-
-        public override void Execute()
-        {
-            if(campingPlacementManager.isBuildFinish)
-            {
-                stateMachine.ChangeState (controller.idleState);
-            }
-        }
-
-        public override void ExitState()
-        {
-            controller.SetActiveTool(ToolType.hammer, false);
-            controller.audioSource.Stop();
-        }
-    }
-
-    public class CampimgState : State
-    {
-        EachCampingPlacementManager campingManager;
-        CampingPlacement campingPlacement;
-        float startTime = 0;
-
-        public CampimgState(NPCController controller, StateMachine stateMachine) : base(controller, stateMachine)
-        {
-            campingManager = controller.campKit.GetComponent<EachCampingPlacementManager>();
-            campingPlacement = campingManager.GetRandomPlacement();
-        }
-    }
-
-    public class MoveState : State
-    {
-        public MoveState(NPCController controller, StateMachine stateMachine) : base(controller, stateMachine)
-        {
-        }
-
-        public override void EnterState()
-        {
-            controller.SetAnimation(AnimType.Walk, true);
         }
     }
 
@@ -378,6 +375,9 @@ public class NPCController : MonoBehaviour
 
         cam.Priority = 9; // 카메라 순서 변경
     }
+
+
+    #endregion
 
     /*
     protected IEnumerator Talk(int dialogueIndex)

@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Managers")]
     public UIManager uIManager;
     public WayPointManager wayPointManager;
     public DataManager dataManager;
+    public CampingManager campingManager;
+    public CharacterManager characterManager;
+
     public EnteranceController entrance;
     public GameObject negativeEntrance;
     public GameObject ManagementOffice;
@@ -92,6 +95,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameSequence()
     {
+        // TODO: Need to check is character visited first TIme
         yield return StartCoroutine(SpawnNPC(npcs[0], entrance.gameObject.transform.position, 0));
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(17f);
@@ -141,7 +145,9 @@ public class GameManager : MonoBehaviour
     public IEnumerator SpawnNPC(GameObject npc, Vector3 spawnPoint, int npcIndex)
     {
         // 캐릭터 소환
-        GameObject character = Instantiate(npc, spawnPoint, entrance.transform.rotation * Quaternion.Euler(0, -90, 0));
+        // GameObject character = Instantiate(npc, spawnPoint, entrance.transform.rotation * Quaternion.Euler(0, -90, 0));
+        Debug.Log(npc.GetComponent<NPCController>());
+        GameObject character = characterManager.SpawnCharacter(npc.GetComponent<NPCController>());
         // 캐릭터의 컨트롤러 반환
         NPCController controller = character.GetComponent<NPCController>();
         NegativeNPCController negativeController = character.GetComponent<NegativeNPCController>();
@@ -189,17 +195,6 @@ public class GameManager : MonoBehaviour
         }
 
         yield return spawnDelay;
-
-        if (controller != null)
-        {
-            controller.goals = wayPointManager.GetWayPoint(npcIndex);
-            Debug.Log(npcIndex);
-            controller.StartAction();
-        }
-        else if (negativeController != null)
-        {
-            Debug.Log(negativeController.gameObject.name);
-        }
     }
 
     #region Scene Control

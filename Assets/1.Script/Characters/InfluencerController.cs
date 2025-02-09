@@ -9,6 +9,7 @@ public class InfluencerController : NPCController
         gameObject.name = "Influencer";
     }
 
+    /*
     public override IEnumerator ActionSequence()
     {
         yield return Enter();
@@ -22,7 +23,7 @@ public class InfluencerController : NPCController
 
 
         yield return Talk();
-        
+
         yield return MoveTo(goals[0]);
         yield return MoveTo(goals[1]);
         yield return Talk();
@@ -38,4 +39,5 @@ public class InfluencerController : NPCController
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
     }
+    */
 }
