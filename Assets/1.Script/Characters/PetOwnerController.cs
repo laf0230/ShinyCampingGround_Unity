@@ -9,33 +9,68 @@ public class PetOwnerController : NPCController
         gameObject.name = "PetOwner";
     }
 
-    /*
-    public override IEnumerator ActionSequence()
+    protected override IEnumerator Enter()
     {
-        yield return Enter();
+        Debug.Log("Enter");
+        goals = GameManager.Instance.wayPointManager.GetWayPoint(name);
+        SetFirstMet(GameManager.Instance.characterManager.IsCharacterVisitFirst(this));
 
+        yield return new WaitForSeconds(1f);
 
-        if (GameManager.Instance.isMetPetOwner == true)
+        if (goals != null)
         {
-            GameManager.Instance.isMetPetOwner = false;
+            yield return Talk();
+
+            StartActionRoutine();
+        }
+    }
+
+    protected override IEnumerator Tour()
+    {
+        int goalIndex = 0;
+
+        while (true)
+        {
+            if (goals[goalIndex].GetComponent<CampSite>())
+            {
+                yield return Talk();
+                StartActionRoutine();
+                break;
+            }
+            else
+            {
+                yield return MoveTo(goals[goalIndex]);
+                goalIndex++;
+            }
+            yield return new WaitForSeconds(2f);
+        }
+    }
+
+    protected override IEnumerator Camping()
+    {
+        if (GameManager.Instance.campingManager.IsExistUseableCampSIte())
+        {
+            var camp = GameManager.Instance.campingManager.GetUseableCampSite();
+
+            yield return MoveTo(camp.gameObject);
+            yield return Build(campKit);
+            yield return RandomAction();
+            yield return Pack(campKit);
+
+            var trash = Instantiate(trashPrefab, transform.position, Quaternion.identity);
+            trash.m_placedSite = camp;
         }
 
-        isMetFirst = !GameManager.Instance.isMetPetOwner;
+        StartActionRoutine();
+    }
 
-        yield return Talk();
-
-        yield return MoveTo(goals[0]);
-        yield return Talk();
-        yield return new WaitForSeconds(2f);
-        yield return Build(kit: campKit);
-        yield return RandomAction();
-        yield return Pack(kit: campKit);
-        Instantiate(trash, position:transform.position, Quaternion.identity);
-        yield return MoveTo(goals[1]);
-        yield return MoveTo(goals[2]);
+    protected override IEnumerator Exit()
+    {
+        yield return MoveTo(GameManager.Instance.campingManager.exit.gameObject);
         yield return Talk();
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
+
+        yield return null;
     }
-    */
 }

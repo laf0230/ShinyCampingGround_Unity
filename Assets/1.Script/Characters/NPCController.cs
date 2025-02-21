@@ -26,7 +26,7 @@ public class NPCController : MonoBehaviour
     [SerializeField] public Queue<System.Action> characterActionsQueue = new Queue<System.Action>();
 
     public CharacterBlink characterFace { get; set; }
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     #region Model Variables
 
@@ -34,7 +34,7 @@ public class NPCController : MonoBehaviour
     [SerializeField] protected GameObject hammer;
     [SerializeField] protected GameObject campKit;
     [SerializeField] protected GameObject tentTool;
-    public GameObject trash;
+    public TrashController trashPrefab;
 
     #endregion
 
@@ -52,24 +52,25 @@ public class NPCController : MonoBehaviour
     #region Talk
 
     [SerializeField] public List<DialogueSO> dialogues;
-    [SerializeField] public List<TalkData> talkData { get; set; }
+    [SerializeField] public List<TalkData> talkData { get; set; } = new List<TalkData>();
     [SerializeField] public DialogueSO randomSpeech;
-    private int currentTalkID { get; set; } = 0;
+    protected int currentTalkID { get; set; } = 0;
     
-    public SpeechBubbleController speechBubbleController { get; private set; }
+    public SpeechBubbleController speechBubbleController { get; set; }
     
-    private List<TalkController> talks = new List<TalkController>();
-    private GeneralTalk generalTalk;
-    private SpecialTalk specialTalk;
+    protected List<TalkController> talks = new List<TalkController>();
+    protected GeneralTalk generalTalk;
+    protected SpecialTalk specialTalk;
 
     #endregion
 
     public bool isRandomAction = false;
-    public bool isMetFirst = true;
+    public bool isVisitedFirst = true;
     public bool isDestination;
 
     protected virtual void Start()
     {
+        Debug.Log("a");
         characterFace = GetComponent<CharacterBlink>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
@@ -99,6 +100,7 @@ public class NPCController : MonoBehaviour
         // npc 대사 중 첫번째 대사 불러오기
         currentTalkID = talkData[0].id;
 
+        SetCharacterRoutine();
     }
 
     public void OnEnable()
@@ -142,14 +144,7 @@ public class NPCController : MonoBehaviour
 
     #region Phase
 
-    protected virtual IEnumerator Enter()
-    {
-        yield return Talk();
-
-        yield return new WaitForFixedUpdate();
-    }
-
-    public void SetCharacterRoutine()
+    public virtual void SetCharacterRoutine()
     {
         Debug.Log("Routine Setted");
         characterActionsQueue.Clear();
@@ -180,9 +175,9 @@ public class NPCController : MonoBehaviour
 
     public void DoExit() => StartCoroutine(Exit());
 
-    public void DoEnter() => StartCoroutine(Enter2()); 
+    public void DoEnter() => StartCoroutine(Enter()); 
 
-    private IEnumerator Enter2()
+    protected virtual IEnumerator Enter()
     {
         Debug.Log("Enter");
         goals = GameManager.Instance.wayPointManager.GetWayPoint(name);
@@ -201,7 +196,7 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    private IEnumerator Tour()
+    protected virtual IEnumerator Tour()
     {
 
         int goalIndex = 0;
@@ -223,7 +218,7 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    private IEnumerator Camping()
+    protected virtual IEnumerator Camping()
     {
         var camp = GameManager.Instance.campingManager.GetUseableCampSite();
         if (camp != null)
@@ -233,13 +228,15 @@ public class NPCController : MonoBehaviour
             yield return Build(campKit);
             yield return RandomAction();
             yield return Pack(campKit);
-            Instantiate(trash, transform.position, Quaternion.identity);
+
+            var trash = Instantiate(trashPrefab, transform.position, Quaternion.identity);
+            trash.m_placedSite = camp;
         }
 
         StartActionRoutine();
     }
 
-    private IEnumerator Exit()
+    protected virtual IEnumerator Exit()
     {
         yield return MoveTo(GameManager.Instance.campingManager.exit.gameObject);
         yield return Talk();
@@ -326,122 +323,70 @@ public class NPCController : MonoBehaviour
             if (characterFace != null)
                 characterFace.ActiveTalk(true);
 
+            Debug.Log("----------------------");
+            Debug.Log("Current Talk Data ID: " + currentTalkID);
+            Debug.Log("TalkData: " + talkData.Count);
+            Debug.Log("----------------------");
             var currentTalkData = talkData.FirstOrDefault((x) => x.id == currentTalkID);
 
-            // talk의 타입 정하기
-            talk = talks[currentTalkData.scriptType];
-            talk.SetTalkData(currentTalkData);
 
-            // 첫 만남이 아닐 때
-            if (isMetFirst)
+            // talk의 타입 정하기
+            // talk = talks[currentTalkData.scriptType];
+
+            // 첫 만남 처리
+            if (!isVisitedFirst)
             {
+                // 첫 만남일 때, 특수 대사 처리
                 talk = talks[1];
             }
             else
             {
-                talk = talks[currentTalkData.scriptType];
+                // 첫 만남이 아닐 때, 일반 대사 처리
+                talk = talks[0];
             }
+
+            Debug.Log("Current Talk Data: "+ GameManager.Instance.dataManager.GetScriptData(currentTalkData.stringID).text);
+            talk.SetTalkData(currentTalkData);
 
             if (talk.Name != null && talk.Text != null)
             {
                 yield return StartCoroutine(talk.Talk());
             }
 
-
             if (characterFace != null)
                 characterFace.ActiveTalk(false);
 
+            // 건너뛰기 요청이 있을 경우
             if (GameManager.Instance.uIManager.dialogueManager.IsSkipRequested())
             {
-                Debug.Log("Skip requeset " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
+                Debug.Log("Skip request " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
                 UIManager.instance.dialogueManager.DisableDialogue();
                 break; // while break
             }
 
-            if (talk == talks[0])
+            // 대화가 끝났을 때 UI 비활성화
+            if (talk == talks[0] && currentTalkData.nextScriptID == 0)
+            {
                 GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
+            }
 
+            // 다음 대사가 없으면 다음 id로 넘어가기
             if (currentTalkData.nextScriptID == 0)
             {
-                // 다음 대사가 없으면 다음 id로 넘어가는 코드
-                currentTalkID++;
-                break;
+                currentTalkID++; // 대사 ID 증가
+                break; // while break
             }
 
             // 다음 대사를 현재 대사에 대입하는 코드
             currentTalkID = currentTalkData.nextScriptID;
-        }
 
+        }
 
         cam.Priority = 9; // 카메라 순서 변경
     }
 
 
     #endregion
-
-    /*
-    protected IEnumerator Talk(int dialogueIndex)
-    {
-        TalkController talk;
-        Debug.Log(gameObject.name + " : state Enter: Talk");
-
-        // 다음 텍스트가 없을 경우 종료
-        while (true)
-        {
-            if (characterFace != null)
-                characterFace.ActiveTalk(true);
-
-            var currentTalkData = talkData[dialogueIndex];
-
-            // talk의 타입 정하기
-            talk = talks[currentTalkData.scriptType];
-            talk.SetTalkData(currentTalkData);
-
-            // 첫 만남이 아닐 때
-            if (!isMetFirst)
-            {
-                talk = talks[1];
-            }
-            else
-            {
-                talk = talks[currentTalkData.scriptType];
-            }
-
-            if (talk.Name != null && talk.Text != null)
-            {
-                yield return StartCoroutine(talk.Talk());
-            }
-
-
-            if (characterFace != null)
-                characterFace.ActiveTalk(false);
-
-            if (GameManager.Instance.uIManager.dialogueManager.IsSkipRequested())
-            {
-                Debug.Log("Skip requeset " + GameManager.Instance.uIManager.dialogueManager.IsSkipRequested());
-                UIManager.instance.dialogueManager.DisableDialogue();
-                break; // while break
-            }
-
-            if (talk == talks[0])
-                GameManager.Instance.uIManager.dialogueManager.DisableDialogue();
-
-            if (currentTalkData.nextScriptID == 0)
-            {
-                // 다음 대사가 없으면 다음 id로 넘어가는 코드
-                currentTalkID++;
-                break;
-            }
-
-            // 다음 대사를 현재 대사에 대입하는 코드
-            currentTalkID = currentTalkData.nextScriptID;
-        }
-
-
-        cam.Priority = 9; // 카메라 순서 변경
-    }
-
-    */
 
     protected virtual IEnumerator RandomAction()
     {
@@ -555,7 +500,7 @@ public class NPCController : MonoBehaviour
 
     public void SetFirstMet(bool isFirstMet)
     {
-        this.isMetFirst = isFirstMet;
+        this.isVisitedFirst = isFirstMet;
     }
     
     public void SetActiveTool(ToolType tool, bool activeTool)

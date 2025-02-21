@@ -15,7 +15,7 @@ public class CharacterManager : MonoBehaviour
      3. 첫 방문이 아닌 것으로 설정값을 바꾼다. <- 매 캐릭터 소환 시마다 지정
     */
     [SerializeField] private List<NPCController> characterPool = new List<NPCController>();
-    public List<string> firstVisitStatus = new List<string>();
+    public List<string> visitedCharacters = new List<string>();
 
     #region Pool
 
@@ -33,7 +33,6 @@ public class CharacterManager : MonoBehaviour
         {
             var instantiatedCharacter = Instantiate(character, GameManager.Instance.campingManager.enterence.position, GameManager.Instance.campingManager.enterence.transform.rotation * Quaternion.Euler(0, -90, 0));
             characterPool.Add(instantiatedCharacter);
-            instantiatedCharacter.SetCharacterRoutine();
             return instantiatedCharacter.gameObject;
         }
     }
@@ -42,10 +41,10 @@ public class CharacterManager : MonoBehaviour
 
     public bool IsCharacterVisitFirst(NPCController character)
     {
-        if (firstVisitStatus.Contains(character.characterName))
+        if (!visitedCharacters.Contains(character.characterName))
         {
             Debug.Log("첫 방문인 NPC입니다.");
-            firstVisitStatus.Add(character.characterName);
+            visitedCharacters.Add(character.characterName);
             return true;
         }
         else

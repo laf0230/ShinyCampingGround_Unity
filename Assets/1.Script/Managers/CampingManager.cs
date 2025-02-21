@@ -9,7 +9,7 @@ public class CampingManager : MonoBehaviour
     public Transform exit;
 
     public CampSite[] m_Sites;
-    public List<CampSite> m_useableCampSites;
+    public List<CampSite> m_useableCampSites = new List<CampSite>();
 
     private void Start()
     {
@@ -23,21 +23,34 @@ public class CampingManager : MonoBehaviour
         }
     }
 
+    public bool IsExistUseableCampSIte()
+    {
+        if(m_useableCampSites.Count == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public bool IsEmptyCampingGround()
+    {
+        if(m_Sites.Length == m_useableCampSites.Count-1)
+            return true;
+        else 
+            return false;
+    }
+
     public CampSite GetUseableCampSite()
     {
         Debug.Log("사이트를 지급했습ㄴ다ㅣ.");
         // 사용 가능한 사이트 반환
         var selectedCampSite = m_useableCampSites[0]; 
         selectedCampSite.isCampSiteUsed = true;
-        if (m_useableCampSites.Count >= 1)
-        {
-            m_useableCampSites.RemoveAt(0);
-            return selectedCampSite;
-        }
-        else
-        {
-            return null;
-        }
+        m_useableCampSites.RemoveAt(0);
+        return selectedCampSite;
     }
 
     public void CampSiteUseEnd(CampSite site)

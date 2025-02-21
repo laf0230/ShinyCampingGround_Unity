@@ -125,33 +125,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c762d22991599b4cbf881f0005a4fef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  states: 
-  tentTool: {fileID: 3660894035406136091}
-  trash: {fileID: 5767487182424121770, guid: 36fa3aba35a4ec54a93ae7b0a03536a5, type: 3}
   characterName: "\uC778\uD50C\uB8E8\uC5B8\uC11C"
   id: 10001
+  moveSpeed: 5
+  cam: {fileID: 5201830633267258582}
+  interactionArea: {fileID: 6853199497056890540}
   Character: {fileID: 9034945102356189236}
   hammer: {fileID: 2840826485824341680}
   campKit: {fileID: 6550587585374199644, guid: 3e006f313ca723e4aa20b1f16aea6805, type: 3}
-  moveSpeed: 5
-  goal: {fileID: 0}
-  goals: []
-  cam: {fileID: 5201830633267258582}
-  SpeechBubbleController: {fileID: 4735697444423835490}
+  tentTool: {fileID: 3660894035406136091}
+  trashPrefab: {fileID: 5813502788386513097, guid: 36fa3aba35a4ec54a93ae7b0a03536a5, type: 3}
+  randomAnimDuration: 10
+  totalRandomAnimDuration: 50
   dialogues:
   - {fileID: 11400000, guid: 54b506f0dd1bb9b479c3371449a199ad, type: 2}
   - {fileID: 11400000, guid: d6c7cea862867a345ab9817b08c4c424, type: 2}
   - {fileID: 11400000, guid: 42bf16ef425205c409058f616c9aeeac, type: 2}
   - {fileID: 11400000, guid: 83ec7f7ff0742334893cdb36cd07ffaa, type: 2}
   randomSpeech: {fileID: 11400000, guid: 6606f39335a93a54c9646eddfb08ea86, type: 2}
-  interactionArea: {fileID: 6853199497056890540}
-  randomAnimDuration: 10
-  totalRandomAnimDuration: 50
-  currentSiturationIndex: 0
-  currentDialogueIndex: 0
-  talkData: []
   isRandomAction: 0
-  isMetFirst: 1
+  isVisitedFirst: 1
+  isDestination: 0
 --- !u!82 &1773847319689514487
 AudioSource:
   m_ObjectHideFlags: 0
@@ -750,17 +744,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eac5fa60c048fed428184379ab33f9f3, type: 3}
---- !u!114 &4735697444423835490 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8850328934604022514, guid: eac5fa60c048fed428184379ab33f9f3, type: 3}
-  m_PrefabInstance: {fileID: 4281301441399012752}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50a010c1a1bb1a74d8dfc734eec006fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7938218647834800568 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6142922224654847016, guid: eac5fa60c048fed428184379ab33f9f3, type: 3}

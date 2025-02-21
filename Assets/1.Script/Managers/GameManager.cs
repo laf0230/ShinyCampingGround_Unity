@@ -27,6 +27,13 @@ public class GameManager : MonoBehaviour
 
     private WaitForSeconds spawnDelay = new WaitForSeconds(3f);
 
+    #region Debug
+
+    public GameObject D_Character;
+
+    #endregion
+
+
     private static GameManager instance;
 
     public static GameManager Instance
@@ -85,6 +92,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha3)) { Time.timeScale /= 0.5f; }
 
         #endregion
+
+        if(Input.GetKeyDown(KeyCode.V) && D_Character != null)
+        {
+            StartCoroutine(SpawnNPC(D_Character, entrance.transform.position, 4));
+        }
     }
 
     public void GameStart()
@@ -116,7 +128,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => entrance.IsOutCharacter());
         yield return new WaitForSeconds(26f);
 
-        yield return StartCoroutine(SpawnNPC(npcs[5], negativeEntrance.transform.position, 5));
+        // yield return StartCoroutine(SpawnNPC(npcs[5], negativeEntrance.transform.position, 5));
 
         // Random Spawn
         while (true)
@@ -138,6 +150,7 @@ public class GameManager : MonoBehaviour
                     yield return StartCoroutine(SpawnNPC(npcs[randomNum - 1], entrance.gameObject.transform.position, randomNum - 1));
                 }
             }
+            yield return new WaitUntil(() => entrance.IsOutCharacter());
         }
 
     }
@@ -146,7 +159,6 @@ public class GameManager : MonoBehaviour
     {
         // 캐릭터 소환
         // GameObject character = Instantiate(npc, spawnPoint, entrance.transform.rotation * Quaternion.Euler(0, -90, 0));
-        Debug.Log(npc.GetComponent<NPCController>());
         GameObject character = characterManager.SpawnCharacter(npc.GetComponent<NPCController>());
         // 캐릭터의 컨트롤러 반환
         NPCController controller = character.GetComponent<NPCController>();
@@ -180,7 +192,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 // 최초로 등장한 캐릭터가 아닌 경우 알람만 띄움
-                controller.isMetFirst = false;
+                controller.isVisitedFirst = false;
                 SoundManager.Instance.PlaySFXMusic("PositiveEnter");
                 uIManager.Alert("손님이 왔어요!", alertType.sub);
                 uIManager.AddCoin(100);
